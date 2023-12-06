@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
     title: 'DarTs',
-    description: 'ローカルダーツ対戦用のスコアアプリです。',
+    description: 'ローカルダーツ対戦用のスコアアプリです。'
 }
 
 export default function RootLayout({

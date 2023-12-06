@@ -1,7 +1,3 @@
-export default function() {
-    return (
-        <div>
-            game
-        </div>
-    );
+export default function () {
+    return <div>game</div>
 }

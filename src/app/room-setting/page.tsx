@@ -1,9 +1,9 @@
 'use client'
 
-import { URLS } from "@/types/urls";
-import { useRouter } from "next/navigation";
+import { URLS } from '@/types/urls'
+import { useRouter } from 'next/navigation'
 
-export default function() {
+export default function () {
     const router = useRouter()
 
     const handleClick = () => {
@@ -14,5 +14,5 @@ export default function() {
         <main>
             <button onClick={handleClick}>next</button>
         </main>
-    );
+    )
 }

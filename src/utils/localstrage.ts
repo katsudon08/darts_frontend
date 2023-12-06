@@ -1,10 +1,10 @@
-import { KEYS } from "@/types/localstrage"
+import { KEYS } from '@/types/localstrage'
 
 export const getLocalStrage = (key: KEYS): string => {
     const value = localStorage.getItem(key)
 
     if (value === null) {
-        return ""
+        return ''
     }
     return value
 }
