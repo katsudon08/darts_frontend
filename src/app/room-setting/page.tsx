@@ -1,12 +1,13 @@
 'use client'
 
+import { URLS } from "@/types/urls";
 import { useRouter } from "next/navigation";
 
 export default function() {
     const router = useRouter()
 
     const handleClick = () => {
-        router.push('/game')
+        router.push(URLS.GAME)
     }
 
     return (
