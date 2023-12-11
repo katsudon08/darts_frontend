@@ -3,11 +3,13 @@
 import { useState, useEffect, ChangeEvent, MouseEvent } from 'react'
 import { useRouter } from 'next/navigation'
 import {
+    getLocalStrage,
     initLocalStrage,
     setLocalStrage
 } from '@/utils/localstrage'
 import { KEYS } from '@/types/localstrage'
 import { URLS } from '@/types/urls'
+import { color, theme } from '@/types/theme'
 
 export default function Home() {
     const router = useRouter()
@@ -15,6 +17,7 @@ export default function Home() {
 
     useEffect(() => {
         initLocalStrage(KEYS.USER_NAME)
+        setText(getLocalStrage(KEYS.USER_NAME))
     }, [])
 
     const handleClick = () => {
@@ -25,13 +28,21 @@ export default function Home() {
     return (
         <main>
             <div
-                className=" flex pt-10 bg-lime-600 min-h-screen justify-center items-center "
+                className={
+                    theme.background.main +
+                    theme.padding.top +
+                    color.background.main
+                }
                 onClick={handleClick}
             >
-                <div className=" flex flex-col pt-10 min-h-fit p-2 h-60 justify-between ">
+                <div
+                    className={
+                        theme.background.col + theme.padding.top + ' h-60 '
+                    }
+                >
                     <input
                         type="text"
-                        className=" py-4 px-2 text-xl "
+                        className={theme.input.text}
                         value={text}
                         onChange={(e: ChangeEvent<HTMLInputElement>) =>
                             setText(e.target.value)
@@ -40,9 +51,7 @@ export default function Home() {
                             e.stopPropagation()
                         }
                     />
-                    <h1 className=" whitespace-nowrap select-none text-4xl font-semibold ">
-                        タップしてスタート
-                    </h1>
+                    <h1 className={theme.text.main}>タップしてスタート</h1>
                 </div>
             </div>
         </main>
