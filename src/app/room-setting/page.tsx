@@ -1,8 +1,8 @@
-'use client'
+"use client"
 
-import { color, theme } from '@/types/theme'
-import { URLS } from '@/types/urls'
-import { useRouter } from 'next/navigation'
+import { color, theme } from "@/types/theme"
+import { URLS } from "@/types/urls"
+import { useRouter } from "next/navigation"
 
 export default function () {
     const router = useRouter()
