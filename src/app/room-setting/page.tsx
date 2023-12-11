@@ -1,6 +1,5 @@
 "use client"
 
-import { color, theme } from "@/types/theme"
 import { URLS } from "@/types/urls"
 import { useRouter } from "next/navigation"
 
@@ -14,8 +13,8 @@ export default function () {
 
     return (
         <main>
-            <div className={theme.background.main + color.background.main}>
-                <div className={theme.background.col}></div>
+            <div className="flex min-h-screen justify-center items-center pt-10 bg-lime-600">
+                <div className="flex flex-col justify-between pt-10"></div>
             </div>
         </main>
     )

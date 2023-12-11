@@ -1,19 +1,18 @@
-'use client'
+"use client"
 
-import { useState, useEffect, ChangeEvent, MouseEvent } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect, ChangeEvent, MouseEvent } from "react"
+import { useRouter } from "next/navigation"
 import {
     getLocalStrage,
     initLocalStrage,
     setLocalStrage
-} from '@/utils/localstrage'
-import { KEYS } from '@/types/localstrage'
-import { URLS } from '@/types/urls'
-import { color, theme } from '@/types/theme'
+} from "@/utils/localstrage"
+import { KEYS } from "@/types/localstrage"
+import { URLS } from "@/types/urls"
 
 export default function Home() {
     const router = useRouter()
-    const [text, setText] = useState('')
+    const [text, setText] = useState("")
 
     useEffect(() => {
         initLocalStrage(KEYS.USER_NAME)
@@ -28,21 +27,15 @@ export default function Home() {
     return (
         <main>
             <div
-                className={
-                    theme.background.main +
-                    theme.padding.top +
-                    color.background.main
-                }
+                className="flex min-h-screen justify-center items-center pt-10 bg-lime-600"
                 onClick={handleClick}
             >
                 <div
-                    className={
-                        theme.background.col + theme.padding.top + ' h-60 '
-                    }
+                    className="flex flex-col justify-between pt-10 h-60"
                 >
                     <input
                         type="text"
-                        className={theme.input.text}
+                        className="py-4 px-2 text-xl"
                         value={text}
                         onChange={(e: ChangeEvent<HTMLInputElement>) =>
                             setText(e.target.value)
@@ -51,7 +44,7 @@ export default function Home() {
                             e.stopPropagation()
                         }
                     />
-                    <h1 className={theme.text.main}>タップしてスタート</h1>
+                    <h1 className="whitespace-nowrap select-none text-4xl font-semibold">タップしてスタート</h1>
                 </div>
             </div>
         </main>
