@@ -9,6 +9,7 @@ import {
 } from "@/utils/localstrage"
 import { KEYS } from "@/types/localstrage"
 import { URLS } from "@/types/urls"
+import TEXT from "@/components/TEXT"
 
 export default function Home() {
     const router = useRouter()
@@ -21,17 +22,17 @@ export default function Home() {
 
     const handleClick = () => {
         setLocalStrage(KEYS.USER_NAME, text)
-        router.push(URLS.ROOM_SETTING)
+        router.push(URLS.ROOM_SELECT)
     }
 
     return (
         <main>
             <div
-                className="flex min-h-screen justify-center items-center pt-10 bg-lime-600"
+                className="flex h-screen justify-center items-center pt-10 bg-lime-600"
                 onClick={handleClick}
             >
                 <div
-                    className="flex flex-col justify-between pt-10 h-60"
+                    className="flex flex-col justify-between pt-10 h-2/5"
                 >
                     <input
                         type="text"
@@ -44,7 +45,7 @@ export default function Home() {
                             e.stopPropagation()
                         }
                     />
-                    <h1 className="whitespace-nowrap select-none text-4xl font-semibold">タップしてスタート</h1>
+                    <TEXT text="タップしてスタート"/>
                 </div>
             </div>
         </main>
