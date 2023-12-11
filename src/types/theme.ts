@@ -2,7 +2,7 @@ export const theme = {
     background: {
         main: ' flex min-h-screen justify-center items-center ',
         col: ' flex flex-col justify-between ',
-        row: ' flex fflex-row justify between '
+        row: ' flex flex-row justify between '
     },
     input: {
         text: ' py-4 px-2 text-xl '
