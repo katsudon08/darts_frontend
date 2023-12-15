@@ -31,9 +31,7 @@ export default function Home() {
                 className="flex h-screen justify-center items-center pt-10 bg-lime-600"
                 onClick={handleClick}
             >
-                <div
-                    className="flex flex-col justify-between pt-10 h-2/5"
-                >
+                <div className="flex flex-col justify-between pt-10 h-2/5">
                     <input
                         type="text"
                         className="py-4 px-2 text-xl"
@@ -45,7 +43,7 @@ export default function Home() {
                             e.stopPropagation()
                         }
                     />
-                    <TEXT text="タップしてスタート"/>
+                    <TEXT text="タップしてスタート" />
                 </div>
             </div>
         </main>
