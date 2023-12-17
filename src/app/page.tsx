@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, ChangeEvent, MouseEvent } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import {
     getLocalStrage,
@@ -36,12 +36,8 @@ export default function Home() {
                         type="text"
                         className="py-4 px-2 text-xl"
                         value={text}
-                        onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                            setText(e.target.value)
-                        }
-                        onClick={(e: MouseEvent<HTMLInputElement>) =>
-                            e.stopPropagation()
-                        }
+                        onChange={e => setText(e.target.value)}
+                        onClick={e => e.stopPropagation()}
                     />
                     <TEXT text="タップしてスタート" />
                 </div>

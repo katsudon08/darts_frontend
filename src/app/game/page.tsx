@@ -4,7 +4,12 @@ import TEXT from "@/components/TEXT"
 import { useState } from "react"
 
 export default function () {
-    const [isActive, setIsActive] = useState(true)
+    const [isActive, setIsActive] = useState(false)
+
+    const handleDarts = (e: React.MouseEvent) => {
+        setIsActive(!isActive)
+        e.stopPropagation()
+    }
 
     return (
         <div className="flex h-screen justify-center items-center  bg-lime-600">
@@ -31,7 +36,12 @@ export default function () {
                                 : "flex justify-center items-center h-80 w-80 invisible"
                         }
                     >
-                        <div className="visible h-32 w-32 rounded-full bg-red-400"></div>
+                        <div className="bg-blue-600 invisible h-full w-full">
+                            
+                        </div>
+                        <div className="absolute visible h-32 w-32 rounded-full bg-red-400">
+                            <button className="h-full w-full" onClick={e => handleDarts(e)} />
+                        </div>
                     </div>
                 </div>
             </div>
