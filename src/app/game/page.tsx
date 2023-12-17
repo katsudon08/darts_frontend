@@ -32,13 +32,17 @@ export default function () {
                     <div
                         className={
                             isActive
-                                ? "flex justify-center items-center h-80 w-80 rounded-full bg-red-200 visible"
-                                : "flex justify-center items-center h-80 w-80 invisible"
+                                ? "flex flex-col justify-center items-center h-80 w-80 rounded-full bg-red-200 visible"
+                                : "flex flex-col justify-center items-center h-80 w-80 invisible"
                         }
                     >
-                        <div className="bg-blue-600 invisible h-full w-full">
-                            
-                        </div>
+                        {Array(7).fill(0).map((v, i) => (
+                            <div className="bg-blue-600 flex flex-row visible h-full w-full border border-black" key={i}>
+                                {Array(7).fill(0).map((v, i) => (
+                                    <div className="h-full w-full border border-b-zinc-600" key={i}></div>
+                                ))}
+                            </div>
+                        ))}
                         <div className="absolute visible h-32 w-32 rounded-full bg-red-400">
                             <button className="h-full w-full" onClick={e => handleDarts(e)} />
                         </div>
