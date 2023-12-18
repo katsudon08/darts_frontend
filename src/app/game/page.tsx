@@ -4,7 +4,7 @@ import TEXT from "@/components/TEXT"
 import { useState } from "react"
 
 export default function () {
-    const [isActive, setIsActive] = useState(true)
+    const [isActive, setIsActive] = useState(false)
 
     const darts = [
         [12, 5, 20, 1, 18],
@@ -47,111 +47,149 @@ export default function () {
                         }
                     >
 
-                        <div className="relative visible translate-y-1/4 bg-blue-950 h-5 w-5">
-                            <div className="absolute top-1 visible h-40 w-8 -translate-y-full -translate-x-3">
-                                <button className="flex justify-center h-full w-fit pt-1">
+                        <div className="relative translate-y-1/4 h-5 w-5">
+                            <div className="absolute top-1 h-40 w-8 -translate-y-full -translate-x-3">
+                                <button className="flex justify-center h-full w-fit pt-2">
                                     <TEXT text="20" />
                                 </button>
                             </div>
-                            <div className="absolute text-center top-1 visible h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-18">
-                                <button className="flex justify-center h-full w-full pt-1">
-                                    <TEXT text="1" />
+                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-18">
+                                <button className="flex justify-center h-full w-full pt-2">
+                                    <span className="origin-center -rotate-18">
+                                        <TEXT text="1" />
+                                    </span>
                                 </button>
                             </div>
-                            <div className="absolute text-center top-1 visible h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-36">
-                                <button className="flex justify-center h-full w-full pt-1">
-                                    <TEXT text="18" />
+                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-36">
+                                <button className="flex justify-center h-full w-full pt-2">
+                                    <span className="origin-center -rotate-36">
+                                        <TEXT text="18" />
+                                    </span>
                                 </button>
                             </div>
-                            <div className="absolute text-center top-1 visible h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-54">
-                                <button className="flex justify-center h-full w-full pt-1">
-                                    <TEXT text="4" />
+                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-54">
+                                <button className="flex justify-center h-full w-full pt-2">
+                                    <span className="origin-center -rotate-54">
+                                        <TEXT text="4" />
+                                    </span>
                                 </button>
                             </div>
-                            <div className="absolute text-center top-1 visible h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-72">
-                                <button className="flex justify-center h-full w-full pt-1">
-                                    <TEXT text="13" />
+                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-72">
+                                <button className="flex justify-center h-full w-full pt-2">
+                                    <span className="origin-center -rotate-72">
+                                        <TEXT text="13" />
+                                    </span>
                                 </button>
                             </div>
-                            <div className="absolute text-center top-1 visible h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-90">
-                                <button className="flex justify-center h-full w-full pt-1">
-                                    <TEXT text="6" />
+                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-90">
+                                <button className="flex justify-center h-full w-full pt-2">
+                                    <span className="origin-center -rotate-90">
+                                        <TEXT text="6" />
+                                    </span>
                                 </button>
                             </div>
-                            <div className="absolute text-center top-1 visible h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-108">
-                                <button className="flex justify-center h-full w-full pt-1">
-                                    <TEXT text="10" />
+                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-108">
+                                <button className="flex justify-center h-full w-full pt-2">
+                                    <span className="origin-center -rotate-108">
+                                        <TEXT text="10" />
+                                    </span>
                                 </button>
                             </div>
-                            <div className="absolute text-center top-1 visible h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-126">
-                                <button className="flex justify-center h-full w-full pt-1">
-                                    <TEXT text="15" />
+                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-126">
+                                <button className="flex justify-center h-full w-full pt-2">
+                                    <span className="origin-center -rotate-126">
+                                        <TEXT text="15" />
+                                    </span>
                                 </button>
                             </div>
-                            <div className="absolute text-center top-1 visible h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-144">
-                                <button className="flex justify-center h-full w-full pt-1">
-                                    <TEXT text="2" />
+                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-144">
+                                <button className="flex justify-center h-full w-full pt-2">
+                                    <span className="origin-center -rotate-144">
+                                        <TEXT text="2" />
+                                    </span>
                                 </button>
                             </div>
-                            <div className="absolute text-center top-1 visible h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-162">
-                                <button className="flex justify-center h-full w-full pt-1">
-                                    <TEXT text="17" />
+                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-162">
+                                <button className="flex justify-center h-full w-full pt-2">
+                                    <span className="origin-center -rotate-162">
+                                        <TEXT text="17" />
+                                    </span>
                                 </button>
                             </div>
-                            <div className="absolute text-center top-1 visible h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-180">
-                                <button className="flex justify-center h-full w-full pt-1">
-                                    <TEXT text="3" />
+                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-180">
+                                <button className="flex justify-center h-full w-full pt-2">
+                                    <span className="origin-center -rotate-180">
+                                        <TEXT text="3" />
+                                    </span>
                                 </button>
                             </div>
-                            <div className="absolute text-center top-1 visible h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-198">
-                                <button className="flex justify-center h-full w-full pt-1">
-                                    <TEXT text="19" />
+                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-198">
+                                <button className="flex justify-center h-full w-full pt-2">
+                                    <span className="origin-center -rotate-198">
+                                        <TEXT text="19" />
+                                    </span>
                                 </button>
                             </div>
-                            <div className="absolute text-center top-1 visible h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-216">
-                                <button className="flex justify-center h-full w-full pt-1">
-                                    <TEXT text="7" />
+                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-216">
+                                <button className="flex justify-center h-full w-full pt-2">
+                                    <span className="origin-center -rotate-216">
+                                        <TEXT text="7" />
+                                    </span>
                                 </button>
                             </div>
-                            <div className="absolute text-center top-1 visible h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-234">
-                                <button className="flex justify-center h-full w-full pt-1">
-                                    <TEXT text="16" />
+                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-234">
+                                <button className="flex justify-center h-full w-full pt-2">
+                                    <span className="origin-center -rotate-234">
+                                        <TEXT text="16" />
+                                    </span>
                                 </button>
                             </div>
-                            <div className="absolute text-center top-1 visible h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-252">
-                                <button className="flex justify-center h-full w-full pt-1">
-                                    <TEXT text="8" />
+                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-252">
+                                <button className="flex justify-center h-full w-full pt-2">
+                                    <span className="origin-center -rotate-252">
+                                        <TEXT text="8" />
+                                    </span>
                                 </button>
                             </div>
-                            <div className="absolute text-center top-1 visible h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-270">
-                                <button className="flex justify-center h-full w-full pt-1">
-                                    <TEXT text="11" />
+                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-270">
+                                <button className="flex justify-center h-full w-full pt-2">
+                                    <span className="origin-center -rotate-270">
+                                        <TEXT text="11" />
+                                    </span>
                                 </button>
                             </div>
-                            <div className="absolute text-center top-1 visible h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-288">
-                                <button className="flex justify-center h-full w-full pt-1">
-                                    <TEXT text="14" />
+                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-288">
+                                <button className="flex justify-center h-full w-full pt-2">
+                                    <span className="origin-center -rotate-288">
+                                        <TEXT text="14" />
+                                    </span>
                                 </button>
                             </div>
-                            <div className="absolute text-center top-1 visible h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-306">
-                                <button className="flex justify-center h-full w-full pt-1">
-                                    <TEXT text="9" />
+                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-306">
+                                <button className="flex justify-center h-full w-full pt-2">
+                                    <span className="origin-center -rotate-306">
+                                        <TEXT text="9" />
+                                    </span>
                                 </button>
                             </div>
-                            <div className="absolute text-center top-1 visible h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-324">
-                                <button className="flex justify-center h-full w-full pt-1">
-                                    <TEXT text="12" />
+                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-324">
+                                <button className="flex justify-center h-full w-full pt-2">
+                                    <span className="origin-center -rotate-324">
+                                        <TEXT text="12" />
+                                    </span>
                                 </button>
                             </div>
-                            <div className="absolute text-center top-1 visible h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-342">
-                                <button className="flex justify-center h-full w-full pt-1">
-                                    <TEXT text="5" />
+                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-342">
+                                <button className="flex justify-center h-full w-full pt-2">
+                                    <span className="origin-center -rotate-342">
+                                        <TEXT text="5" />
+                                    </span>
                                 </button>
                             </div>
                         </div>
 
 
-                        <div className="absolute invisible h-32 w-32 rounded-full bg-red-400">
+                        <div className="absolute visible h-32 w-32 rounded-full bg-red-400">
                             <button className="h-full w-full" onClick={e => handleDarts(e)} />
                         </div>
                     </div>
