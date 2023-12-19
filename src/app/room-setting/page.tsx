@@ -38,9 +38,7 @@ export default function () {
                             </div>
                         </div>
                         <div className="flex flex-col justify-between bg-yellow-300 h-full w-1/5">
-                            {Array(4)
-                                .fill(0)
-                                .map((v, i) => (
+                            {Array.from({length: 4}).map((_, i) => (
                                     <button
                                         className="bg-white rounded-full mx-2 py-3"
                                         key={i}
@@ -66,9 +64,7 @@ export default function () {
                             </div>
                         </div>
                         <div className="flex justify-between px-10 space-x-1  bg-green-400 h-full w-full">
-                            {Array(3)
-                                .fill(0)
-                                .map((v, i) => (
+                            {Array.from({length: 3}).map((_, i) => (
                                     <div
                                         className="bg-red-300 w-full rounded-md"
                                         key={i}
