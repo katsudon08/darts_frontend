@@ -1,19 +1,26 @@
 "use client"
 
 import TEXT from "@/components/TEXT"
-import { useState } from "react"
+import React, { useState } from "react"
 
 export default function () {
     const [isActive, setIsActive] = useState(false)
-    
+    const [score, setScore] = useState(0)
+    const [times, setTimes] = useState(1)
 
     const handleScore = (e: React.MouseEvent, num: number) => {
-        console.log(num)
+        setIsActive(!isActive)
+        setScore(num)
         e.stopPropagation()
+    }
+
+    const handleTimes = (num: number) => {
+        setTimes(num)
     }
 
     const handleDarts = (e: React.MouseEvent) => {
         setIsActive(!isActive)
+        setScore(50)
         e.stopPropagation()
     }
 
@@ -32,7 +39,7 @@ export default function () {
                     </div>
                     <div className="bg-green-200 flex flex-row h-2/5 w-full">
                         {Array.from({ length: 3 }).map((_, i) => (
-                            <button className="h-full w-full" key={i}>
+                            <button className="h-full w-full" key={i} onClick={() => handleTimes(i+1)}>
                                 <TEXT text={"x" + String(i + 1)} />
                             </button>
                         ))}
@@ -43,7 +50,7 @@ export default function () {
                         <div className="flex flex-col justify-between h-full w-full">
                             <div className="flex flex-row justify-end pt-2 pr-2">
                                 <div className="h-20 w-20 flex justify-center items-center">
-                                    <TEXT text="1" />
+                                    <TEXT text={String(score*times)} />
                                 </div>
                             </div>
                             <div className="flex flex-row justify-end pb-1 pr-1">
@@ -66,7 +73,7 @@ export default function () {
                                     <TEXT text="20" />
                                 </button>
                             </div>
-                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-18">
+                            <div className="absolute text-center top-1 h-40 w-10 -translate-y-full -translate-x-1.5 origin-bottom rotate-18">
                                 <button className="flex justify-center h-full w-full pt-2" onClick={e => handleScore(e, 1)}>
                                     <span className="origin-center -rotate-18">
                                         <TEXT text="1" />
@@ -192,7 +199,7 @@ export default function () {
                                     </span>
                                 </button>
                             </div>
-                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-342">
+                            <div className="absolute text-center top-1 h-40 w-8 -translate-y-full -translate-x-2 origin-bottom rotate-342">
                                 <button className="flex justify-center h-full w-full pt-2" onClick={e => handleScore(e, 5)}>
                                     <span className="origin-center -rotate-342">
                                         <TEXT text="5" />
