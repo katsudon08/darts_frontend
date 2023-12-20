@@ -36,8 +36,8 @@ export default function Home() {
                         type="text"
                         className="py-4 px-2 text-xl"
                         value={text}
-                        onChange={e => setText(e.target.value)}
-                        onClick={e => e.stopPropagation()}
+                        onChange={(e) => setText(e.target.value)}
+                        onClick={(e) => e.stopPropagation()}
                     />
                     <TEXT text="タップしてスタート" />
                 </div>

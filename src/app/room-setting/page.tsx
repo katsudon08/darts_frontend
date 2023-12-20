@@ -38,14 +38,14 @@ export default function () {
                             </div>
                         </div>
                         <div className="flex flex-col justify-between bg-yellow-300 h-full w-1/5">
-                            {Array.from({length: 4}).map((_, i) => (
-                                    <button
-                                        className="bg-white rounded-full mx-2 py-3"
-                                        key={i}
-                                    >
-                                        <TEXT text={String(i + 1)} />
-                                    </button>
-                                ))}
+                            {Array.from({ length: 4 }).map((_, i) => (
+                                <button
+                                    className="bg-white rounded-full mx-2 py-3"
+                                    key={i}
+                                >
+                                    <TEXT text={String(i + 1)} />
+                                </button>
+                            ))}
                         </div>
                     </div>
                     <div className="flex flex-col justify-between items-center h-2/5 space-y-2 py-5 px-10 bg-blue-200">
@@ -64,15 +64,15 @@ export default function () {
                             </div>
                         </div>
                         <div className="flex justify-between px-10 space-x-1  bg-green-400 h-full w-full">
-                            {Array.from({length: 3}).map((_, i) => (
-                                    <div
-                                        className="bg-red-300 w-full rounded-md"
-                                        key={i}
-                                    >
-                                        <TEXT text={String(i + 1)} />
-                                        ターン
-                                    </div>
-                                ))}
+                            {Array.from({ length: 3 }).map((_, i) => (
+                                <div
+                                    className="bg-red-300 w-full rounded-md"
+                                    key={i}
+                                >
+                                    <TEXT text={String(i + 1)} />
+                                    ターン
+                                </div>
+                            ))}
                         </div>
                         <div className="flex justify-center items-center bg-green-400 h-full w-full">
                             <button
