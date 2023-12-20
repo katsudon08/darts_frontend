@@ -16,7 +16,7 @@ export default function () {
     }
 
     return (
-        <div className="flex h-screen justify-center items-center py-10 bg-lime-600">
+        <main className="flex h-screen justify-center items-center py-10 bg-lime-600">
             <div className="flex flex-col justify-between h-3/5 w-3/5">
                 <button
                     className="h-1/3 w-full rounded-md bg-white"
@@ -31,6 +31,6 @@ export default function () {
                     <TEXT text="ルームに参加" />
                 </button>
             </div>
-        </div>
+        </main>
     )
 }

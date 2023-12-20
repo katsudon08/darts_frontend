@@ -33,7 +33,7 @@ export default function () {
     }
 
     return (
-        <div className="flex h-screen justify-center items-center  bg-lime-600">
+        <main className="flex h-screen justify-center items-center  bg-lime-600">
             <div className="flex flex-col h-full w-full">
                 <div className="flex flex-col h-2/5 w-full bg-red-100">
                     <div className="absolute top-0 left-0 h-24 w-24 pt-1 pl-1">
@@ -304,6 +304,6 @@ export default function () {
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
     )
 }
