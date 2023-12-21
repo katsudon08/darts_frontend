@@ -14,7 +14,7 @@ export default function () {
         setTeamcode(generateRandomString())
     }, [])
 
-    const strs = Array(9).fill("")
+    const strs = Array(6).fill("")
 
     const handleClick = () => {
         router.push(URLS.GAME)
