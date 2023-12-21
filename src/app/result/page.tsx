@@ -10,7 +10,7 @@ export default function () {
     const strs = Array(6).fill("")
 
     const handleContinue = () => {
-        router.push(URLS.ROOM_SETTING)
+        router.replace(URLS.ROOM_SETTING)
     }
 
     return (

@@ -1,15 +1,23 @@
 "use client"
 
 import TEXT from "@/components/TEXT"
+import { KEYS } from "@/types/localstrage"
 import { URLS } from "@/types/urls"
+import { getLocalStrage, initLocalStrage } from "@/utils/localstrage"
 import { useRouter } from "next/navigation"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 
 export default function () {
     const router = useRouter()
     const [isActive, setIsActive] = useState(false)
     const [score, setScore] = useState(0)
+    const [turn, setTurn] = useState(1)
     const [times, setTimes] = useState(1)
+
+    useEffect(() => {
+        initLocalStrage(KEYS.TURN)
+        setTurn(Number(getLocalStrage(KEYS.TURN)))
+    }, [])
 
     const handleScore = (e: React.MouseEvent, num: number) => {
         isActive && setScore(num)
@@ -27,6 +35,10 @@ export default function () {
         e.stopPropagation()
     }
 
+    const handleContinue = () => {
+        1 < turn ? setTurn(turn-1) : router.replace(URLS.RESULT)
+    }
+
     const handleReset = () => {
         setScore(0)
         setIsActive(false)
@@ -38,8 +50,8 @@ export default function () {
                 <div className="flex flex-col h-2/5 w-full bg-red-100">
                     <div className="absolute top-0 left-0 h-24 w-24 pt-1 pl-1">
                         <div className="flex justify-center items-center h-full w-full pl-2 scale-150">
-                            <TEXT text="1" />
-                            <div className="scale-75 pt-4">ターン</div>
+                            <TEXT text={String(turn)} />
+                            <div className="scale-75 select-none pt-4">ターン</div>
                         </div>
                     </div>
                     <div className="bg-green-300 flex justify-center items-center h-3/5 w-full">
@@ -74,7 +86,7 @@ export default function () {
                                 </button>
                                 <button
                                     className="flex justify-center items-center h-16 w-16"
-                                    onClick={() => router.push(URLS.RESULT)}
+                                    onClick={handleContinue}
                                 >
                                     <img
                                         width="50"
