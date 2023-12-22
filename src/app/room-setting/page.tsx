@@ -7,10 +7,13 @@ import { URLS } from "@/types/urls"
 import { generateRandomString } from "@/utils/generateRandomString"
 import { getLocalStrage, initLocalStrage, setLocalStrage } from "@/utils/localstrage"
 import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 export default function () {
+    const socketRef = useRef<WebSocket>()
+
     const router = useRouter()
+    const [isConnected, setIsConnected] = useState(false)
     const [selectedTurn, setSelectedTurn] = useState(1)
     const [roomFlag, setRoomFlag] = useState(false)
     const [teamcode, setTeamcode] = useState("")
@@ -20,9 +23,29 @@ export default function () {
         initLocalStrage(KEYS.TURN)
         setRoomFlag(getLocalStrage(KEYS.ROOM_SELECT) === ROOM_SELECT.HOLD)
         setTeamcode(generateRandomString())
+
+        socketRef.current = new WebSocket("ws://localhost:8080/socket")
+
+        socketRef.current.onopen = () => {
+            setIsConnected(true)
+            console.log("connected")
+        }
+
+        socketRef.current.onclose = () => {
+            setIsConnected(false)
+            console.log("closed")
+        }
+
+        return () => {
+            if (socketRef.current == null) {
+                return
+            }
+            socketRef.current.close()
+        }
     }, [])
 
     const strs = Array(6).fill("")
+    console.log(`websocket is connected : ${isConnected}`)
 
     const handleSelectTurn = (num: number) => {
         setSelectedTurn(num)
