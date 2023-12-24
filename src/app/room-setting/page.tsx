@@ -13,6 +13,7 @@ export default function () {
     const socketRef = useRef<WebSocket>()
 
     const router = useRouter()
+    const [message, setMessage] = useState("")
     const [isConnected, setIsConnected] = useState(false)
     const [selectedTurn, setSelectedTurn] = useState(1)
     const [roomFlag, setRoomFlag] = useState(false)
@@ -36,6 +37,10 @@ export default function () {
             console.log("closed")
         }
 
+        socketRef.current.onmessage = (e) => {
+            setMessage(e.data)
+        }
+
         return () => {
             if (socketRef.current == null) {
                 return
@@ -46,6 +51,7 @@ export default function () {
 
     const strs = Array(6).fill("")
     console.log(`websocket is connected : ${isConnected}`)
+    console.log(`message: ${message}`)
 
     const handleSelectTurn = (num: number) => {
         setSelectedTurn(num)
@@ -57,7 +63,8 @@ export default function () {
     }
 
     const handleContinue = () => {
-        router.replace(URLS.GAME)
+        // router.replace(URLS.GAME)
+        socketRef.current?.send("送りたいやつ")
     }
 
     return (
