@@ -16,6 +16,7 @@ export default function () {
     const [message, setMessage] = useState("")
     const [isConnected, setIsConnected] = useState(false)
     const [selectedTurn, setSelectedTurn] = useState(1)
+    const [selectedGroup, setSelectedGroup] = useState(0)
     const [roomFlag, setRoomFlag] = useState(false)
     const [teamcode, setTeamcode] = useState("")
 
@@ -25,7 +26,7 @@ export default function () {
         setRoomFlag(getLocalStrage(KEYS.ROOM_SELECT) === ROOM_SELECT.HOLD)
         setTeamcode(generateRandomString())
 
-        socketRef.current = new WebSocket("ws://localhost:8080/socket")
+        socketRef.current = new WebSocket("ws://localhost:8080/ws")
 
         socketRef.current.onopen = () => {
             setIsConnected(true)
@@ -50,6 +51,8 @@ export default function () {
     }, [])
 
     const strs = Array(6).fill("")
+    const groups = ["1", "A", "B"]
+
     console.log(`websocket is connected : ${isConnected}`)
     console.log(`message: ${message}`)
 
@@ -58,7 +61,13 @@ export default function () {
         setLocalStrage(KEYS.TURN, String(num))
     }
 
+    const handleSelectGroup = (num: number) => {
+        setSelectedGroup(num)
+        socketRef.current?.send(groups[num])
+    }
+
     const handleFinish = () => {
+        socketRef.current?.close()
         router.replace(URLS.HOME)
     }
 
@@ -84,13 +93,20 @@ export default function () {
                                 ))}
                             </div>
                         </div>
-                        <div className="flex flex-col justify-between bg-yellow-300 h-full w-1/5">
-                            {Array.from({ length: 4 }).map((_, i) => (
+                        <div className="flex flex-col justify-between space-y-2 bg-yellow-300 h-full w-1/5">
+                            {groups.map((v, i) => (
                                 <button
-                                    className="bg-white rounded-full mx-2 py-3"
+                                    className={
+                                        selectedGroup === i
+                                        ?
+                                        "bg-slate-300 rounded-full h-full mx-2 py-3"
+                                        :
+                                        "bg-white rounded-full h-full mx-2 py-3"
+                                    }
                                     key={i}
+                                    onClick={() => handleSelectGroup(i)}
                                 >
-                                    <TEXT text={String(i + 1)} />
+                                    <TEXT text={v} />
                                 </button>
                             ))}
                         </div>
