@@ -4,6 +4,7 @@ import TEXT from "@/components/TEXT"
 import { KEYS } from "@/types/localstrage"
 import { ROOM_SELECT } from "@/types/room-select"
 import { URLS } from "@/types/urls"
+import { DATA, DETAIL, KEY } from "@/types/websocket"
 import { generateRandomString } from "@/utils/generateRandomString"
 import { getLocalStrage, initLocalStrage, setLocalStrage } from "@/utils/localstrage"
 import { useRouter } from "next/navigation"
@@ -59,11 +60,26 @@ export default function () {
     const handleSelectTurn = (num: number) => {
         setSelectedTurn(num)
         setLocalStrage(KEYS.TURN, String(num))
+
+        const data: DATA = {
+            Key: KEY.ROOM_SETTING,
+            Detail: DETAIL.TURN,
+            Value: String(num)
+        }
+
+        socketRef.current?.send(JSON.stringify(data))
     }
 
     const handleSelectGroup = (num: number) => {
         setSelectedGroup(num)
-        socketRef.current?.send(groups[num])
+
+        const data: DATA = {
+            Key: KEY.ROOM_SETTING,
+            Detail: DETAIL.GROUP,
+            Value: groups[num]
+        }
+
+        socketRef.current?.send(JSON.stringify(data))
     }
 
     const handleFinish = () => {
@@ -72,11 +88,7 @@ export default function () {
     }
 
     const handleContinue = () => {
-        // router.replace(URLS.GAME)
-        socketRef.current?.send(JSON.stringify({
-            Key: "a",
-            Value: "b"
-        }))
+        router.replace(URLS.GAME)
     }
 
     return (
