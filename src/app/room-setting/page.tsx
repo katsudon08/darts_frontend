@@ -73,7 +73,10 @@ export default function () {
 
     const handleContinue = () => {
         // router.replace(URLS.GAME)
-        socketRef.current?.send("送りたいやつ")
+        socketRef.current?.send(JSON.stringify({
+            Key: "a",
+            Value: "b"
+        }))
     }
 
     return (
