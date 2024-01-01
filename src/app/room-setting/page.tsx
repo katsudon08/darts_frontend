@@ -16,6 +16,7 @@ export default function () {
     const router = useRouter()
     const [message, setMessage] = useState<DATA>()
     const [user, setUser] = useState("")
+    const [users, setUsers] = useState<string[]>([])
     const [isConnected, setIsConnected] = useState(false)
     const [selectedTurn, setSelectedTurn] = useState(1)
     const [selectedGroup, setSelectedGroup] = useState(0)
@@ -45,10 +46,7 @@ export default function () {
         socketRef.current.onmessage = (e) => {
             setMessage(JSON.parse(e.data))
 
-            // 修正
-            // if (message?.Detail === DETAIL.GROUP) {
-            //     // setSelectedGroup(message.Value)
-            // }
+            console.log(message)
         }
 
         return () => {
@@ -62,11 +60,18 @@ export default function () {
     const strs = Array(6).fill("")
     const groups = ["1", "A", "B"]
 
-    console.log(`websocket is connected : ${isConnected}`)
-    console.log(message)
+    console.log(`websocket is connected : ${isConnected}`);
+
+    () => {
+        console.log("message: " + message)
+        console.log("value: " + message?.Value)
+        setSelectedTurn(Number(message?.Value))
+    }
+
+    console.log("test")
 
     const handleSelectTurn = (num: number) => {
-        setSelectedTurn(num)
+        // setSelectedTurn(num)
         setLocalStrage(STRAGE_KEYS.TURN, String(num))
 
         const data: DATA = {
@@ -87,7 +92,7 @@ export default function () {
             Value: groups[num]
         }
 
-        // socketRef.current?.send(JSON.stringify(data))
+        socketRef.current?.send(JSON.stringify(data))
     }
 
     const handleFinish = () => {
