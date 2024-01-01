@@ -1,7 +1,7 @@
 "use client"
 
 import TEXT from "@/components/TEXT"
-import { KEYS } from "@/types/localstrage"
+import { STRAGE_KEYS } from "@/types/localstrage"
 import { URLS } from "@/types/urls"
 import { getLocalStrage, initLocalStrage } from "@/utils/localstrage"
 import { useRouter } from "next/navigation"
@@ -15,8 +15,8 @@ export default function () {
     const [times, setTimes] = useState(1)
 
     useEffect(() => {
-        initLocalStrage(KEYS.TURN)
-        setTurn(Number(getLocalStrage(KEYS.TURN)))
+        initLocalStrage(STRAGE_KEYS.TURN)
+        setTurn(Number(getLocalStrage(STRAGE_KEYS.TURN)))
     }, [])
 
     const handleScore = (e: React.MouseEvent, num: number) => {
@@ -36,7 +36,7 @@ export default function () {
     }
 
     const handleContinue = () => {
-        1 < turn ? setTurn(turn-1) : router.replace(URLS.RESULT)
+        1 < turn ? setTurn(turn - 1) : router.replace(URLS.RESULT)
     }
 
     const handleReset = () => {

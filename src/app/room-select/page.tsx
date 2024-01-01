@@ -1,7 +1,7 @@
 "use client"
 
 import TEXT from "@/components/TEXT"
-import { KEYS } from "@/types/localstrage"
+import { STRAGE_KEYS } from "@/types/localstrage"
 import { ROOM_SELECT } from "@/types/room-select"
 import { URLS } from "@/types/urls"
 import { initLocalStrage, setLocalStrage } from "@/utils/localstrage"
@@ -12,16 +12,16 @@ export default function () {
     const router = useRouter()
 
     useEffect(() => {
-        initLocalStrage(KEYS.ROOM_SELECT)
+        initLocalStrage(STRAGE_KEYS.ROOM_SELECT)
     }, [])
 
     const handleHold = () => {
-        setLocalStrage(KEYS.ROOM_SELECT, ROOM_SELECT.HOLD)
+        setLocalStrage(STRAGE_KEYS.ROOM_SELECT, ROOM_SELECT.HOLD)
         router.push(URLS.ROOM_SETTING)
     }
 
     const handleJoin = () => {
-        setLocalStrage(KEYS.ROOM_SELECT, ROOM_SELECT.JOIN)
+        setLocalStrage(STRAGE_KEYS.ROOM_SELECT, ROOM_SELECT.JOIN)
         router.push(URLS.ROOM_SETTING)
     }
 

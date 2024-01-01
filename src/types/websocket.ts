@@ -1,14 +1,10 @@
 export interface DATA {
     Key: KEY
-    Detail: DETAIL
+    User: string
     Value: string
 }
 
 export const enum KEY {
-    ROOM_SETTING = "room-setting"
-}
-
-export const enum DETAIL {
     GROUP = "group",
-    TURN = "turn",
+    TURN = "turn"
 }

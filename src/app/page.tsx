@@ -7,7 +7,7 @@ import {
     initLocalStrage,
     setLocalStrage
 } from "@/utils/localstrage"
-import { KEYS } from "@/types/localstrage"
+import { STRAGE_KEYS } from "@/types/localstrage"
 import { URLS } from "@/types/urls"
 import TEXT from "@/components/TEXT"
 
@@ -16,12 +16,12 @@ export default function Home() {
     const [text, setText] = useState("")
 
     useEffect(() => {
-        initLocalStrage(KEYS.USER_NAME)
-        setText(getLocalStrage(KEYS.USER_NAME))
+        initLocalStrage(STRAGE_KEYS.USER_NAME)
+        setText(getLocalStrage(STRAGE_KEYS.USER_NAME))
     }, [])
 
     const handleClick = () => {
-        setLocalStrage(KEYS.USER_NAME, text)
+        setLocalStrage(STRAGE_KEYS.USER_NAME, text)
         router.push(URLS.ROOM_SELECT)
     }
 

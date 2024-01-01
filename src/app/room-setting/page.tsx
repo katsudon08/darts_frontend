@@ -1,10 +1,10 @@
 "use client"
 
 import TEXT from "@/components/TEXT"
-import { KEYS } from "@/types/localstrage"
+import { STRAGE_KEYS } from "@/types/localstrage"
 import { ROOM_SELECT } from "@/types/room-select"
 import { URLS } from "@/types/urls"
-import { DATA, DETAIL, KEY } from "@/types/websocket"
+import { DATA, KEY } from "@/types/websocket"
 import { generateRandomString } from "@/utils/generateRandomString"
 import { getLocalStrage, initLocalStrage, setLocalStrage } from "@/utils/localstrage"
 import { useRouter } from "next/navigation"
@@ -14,7 +14,8 @@ export default function () {
     const socketRef = useRef<WebSocket>()
 
     const router = useRouter()
-    const [message, setMessage] = useState("")
+    const [message, setMessage] = useState<DATA>()
+    const [user, setUser] = useState("")
     const [isConnected, setIsConnected] = useState(false)
     const [selectedTurn, setSelectedTurn] = useState(1)
     const [selectedGroup, setSelectedGroup] = useState(0)
@@ -22,10 +23,12 @@ export default function () {
     const [teamcode, setTeamcode] = useState("")
 
     useEffect(() => {
-        initLocalStrage(KEYS.ROOM_SELECT)
-        initLocalStrage(KEYS.TURN)
-        setRoomFlag(getLocalStrage(KEYS.ROOM_SELECT) === ROOM_SELECT.HOLD)
+        initLocalStrage(STRAGE_KEYS.ROOM_SELECT)
+        initLocalStrage(STRAGE_KEYS.TURN)
+        initLocalStrage(STRAGE_KEYS.USER_NAME)
+        setRoomFlag(getLocalStrage(STRAGE_KEYS.ROOM_SELECT) === ROOM_SELECT.HOLD)
         setTeamcode(generateRandomString())
+        setUser(getLocalStrage(STRAGE_KEYS.USER_NAME))
 
         socketRef.current = new WebSocket("ws://localhost:8080/ws")
 
@@ -40,7 +43,12 @@ export default function () {
         }
 
         socketRef.current.onmessage = (e) => {
-            setMessage(e.data)
+            setMessage(JSON.parse(e.data))
+
+            // 修正
+            // if (message?.Detail === DETAIL.GROUP) {
+            //     // setSelectedGroup(message.Value)
+            // }
         }
 
         return () => {
@@ -55,15 +63,15 @@ export default function () {
     const groups = ["1", "A", "B"]
 
     console.log(`websocket is connected : ${isConnected}`)
-    console.log(`message: ${message}`)
+    console.log(message)
 
     const handleSelectTurn = (num: number) => {
         setSelectedTurn(num)
-        setLocalStrage(KEYS.TURN, String(num))
+        setLocalStrage(STRAGE_KEYS.TURN, String(num))
 
         const data: DATA = {
-            Key: KEY.ROOM_SETTING,
-            Detail: DETAIL.TURN,
+            Key: KEY.TURN,
+            User: user,
             Value: String(num)
         }
 
@@ -74,12 +82,12 @@ export default function () {
         setSelectedGroup(num)
 
         const data: DATA = {
-            Key: KEY.ROOM_SETTING,
-            Detail: DETAIL.GROUP,
+            Key: KEY.GROUP,
+            User: user,
             Value: groups[num]
         }
 
-        socketRef.current?.send(JSON.stringify(data))
+        // socketRef.current?.send(JSON.stringify(data))
     }
 
     const handleFinish = () => {
@@ -113,10 +121,10 @@ export default function () {
                                 <button
                                     className={
                                         selectedGroup === i
-                                        ?
-                                        "bg-slate-300 rounded-full h-full mx-2 py-3"
-                                        :
-                                        "bg-white rounded-full h-full mx-2 py-3"
+                                            ?
+                                            "bg-slate-300 rounded-full h-full mx-2 py-3"
+                                            :
+                                            "bg-white rounded-full h-full mx-2 py-3"
                                     }
                                     key={i}
                                     onClick={() => handleSelectGroup(i)}
@@ -145,14 +153,14 @@ export default function () {
                             {Array.from({ length: 3 }).map((_, i) => (
                                 <button
                                     className={
-                                        i+1 === selectedTurn
-                                        ?
-                                        "bg-red-400 h-full w-full rounded-xl"
-                                        :
-                                        "bg-red-300 h-full w-full rounded-xl"
+                                        i + 1 === selectedTurn
+                                            ?
+                                            "bg-red-400 h-full w-full rounded-xl"
+                                            :
+                                            "bg-red-300 h-full w-full rounded-xl"
                                     }
                                     key={i}
-                                    onClick={() => handleSelectTurn(i+1)}
+                                    onClick={() => handleSelectTurn(i + 1)}
                                 >
                                     <TEXT text={String(i + 1)} />
                                     <div className="select-none">ターン</div>
@@ -161,7 +169,7 @@ export default function () {
                         </div>
                         <div className="flex justify-center items-center bg-green-400 h-full w-full">
                             <button className="bg-green-600 py-2 px-8  rounded-sm" onClick={handleFinish}>
-                                <TEXT text="ゲーム終了"/>
+                                <TEXT text="ゲーム終了" />
                             </button>
                         </div>
                         <div className="flex justify-center items-center bg-green-400 h-full w-full">
