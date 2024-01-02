@@ -4,20 +4,19 @@ import TEXT from "@/components/TEXT"
 import { STRAGE_KEYS } from "@/types/localstrage"
 import { ROOM_SELECT } from "@/types/room-select"
 import { URLS } from "@/types/urls"
-import { DATA, KEY } from "@/types/websocket"
+import { KEYS } from "@/types/websocket"
 import { generateRandomString } from "@/utils/generateRandomString"
 import { getLocalStrage, initLocalStrage, setLocalStrage } from "@/utils/localstrage"
 import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
+import ReconnectingWebSocket from "reconnecting-websocket"
 
 export default function () {
-    const socketRef = useRef<WebSocket>()
+    const turnSocket = useRef<ReconnectingWebSocket>()
+    const groupSocket = useRef<ReconnectingWebSocket>()
 
     const router = useRouter()
-    const [message, setMessage] = useState<DATA>()
     const [user, setUser] = useState("")
-    const [users, setUsers] = useState<string[]>([])
-    const [isConnected, setIsConnected] = useState(false)
     const [selectedTurn, setSelectedTurn] = useState(1)
     const [selectedGroup, setSelectedGroup] = useState(0)
     const [roomFlag, setRoomFlag] = useState(false)
@@ -31,72 +30,42 @@ export default function () {
         setTeamcode(generateRandomString())
         setUser(getLocalStrage(STRAGE_KEYS.USER_NAME))
 
-        socketRef.current = new WebSocket("ws://localhost:8080/ws")
+        groupSocket.current = new ReconnectingWebSocket("ws://localhost:8080/"+KEYS.GROUP)
+        turnSocket.current = new ReconnectingWebSocket("ws://localhost:8080/"+KEYS.TURN)
 
-        socketRef.current.onopen = () => {
-            setIsConnected(true)
-            console.log("connected")
+        groupSocket.current.onmessage = (e) => {
+
         }
 
-        socketRef.current.onclose = () => {
-            setIsConnected(false)
-            console.log("closed")
-        }
+        turnSocket.current.onmessage = (e) => {
 
-        socketRef.current.onmessage = (e) => {
-            setMessage(JSON.parse(e.data))
-
-            console.log(message)
         }
 
         return () => {
-            if (socketRef.current == null) {
-                return
-            }
-            socketRef.current.close()
+            groupSocket.current?.close()
+            turnSocket.current?.close()
         }
     }, [])
 
     const strs = Array(6).fill("")
     const groups = ["1", "A", "B"]
 
-    console.log(`websocket is connected : ${isConnected}`);
-
-    () => {
-        console.log("message: " + message)
-        console.log("value: " + message?.Value)
-        setSelectedTurn(Number(message?.Value))
-    }
-
-    console.log("test")
-
-    const handleSelectTurn = (num: number) => {
-        // setSelectedTurn(num)
-        setLocalStrage(STRAGE_KEYS.TURN, String(num))
-
-        const data: DATA = {
-            Key: KEY.TURN,
-            User: user,
-            Value: String(num)
-        }
-
-        socketRef.current?.send(JSON.stringify(data))
-    }
-
     const handleSelectGroup = (num: number) => {
         setSelectedGroup(num)
 
-        const data: DATA = {
-            Key: KEY.GROUP,
-            User: user,
-            Value: groups[num]
-        }
+        // groupsocketを送信
+    }
 
-        socketRef.current?.send(JSON.stringify(data))
+    const handleSelectTurn = (num: number) => {
+        setSelectedTurn(num)
+        setLocalStrage(STRAGE_KEYS.TURN, String(num))
+
+        // turnsocketを送信
     }
 
     const handleFinish = () => {
-        socketRef.current?.close()
+        groupSocket.current?.close()
+        turnSocket.current?.close()
         router.replace(URLS.HOME)
     }
 
