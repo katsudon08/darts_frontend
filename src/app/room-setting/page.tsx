@@ -33,12 +33,33 @@ export default function () {
         groupSocket.current = new ReconnectingWebSocket("ws://localhost:8080/"+KEYS.GROUP)
         turnSocket.current = new ReconnectingWebSocket("ws://localhost:8080/"+KEYS.TURN)
 
-        groupSocket.current.onmessage = (e) => {
+        groupSocket.current.onopen = () => {
+            console.log("group open")
+        }
 
+        groupSocket.current.onclose = () => {
+            console.log("group close")
+        }
+
+        groupSocket.current.onmessage = (e) => {
+            console.log("group: "+e.data)
+
+            setSelectedGroup(Number(e.data))
+        }
+
+        turnSocket.current.onopen = () => {
+            console.log("turn open")
+        }
+
+        turnSocket.current.onclose = () => {
+            console.log("turn close")
         }
 
         turnSocket.current.onmessage = (e) => {
+            console.log("turn: "+e.data)
 
+            setSelectedTurn(Number(e.data))
+            setLocalStrage(STRAGE_KEYS.TURN, e.data)
         }
 
         return () => {
@@ -51,16 +72,13 @@ export default function () {
     const groups = ["1", "A", "B"]
 
     const handleSelectGroup = (num: number) => {
-        setSelectedGroup(num)
-
         // groupsocketを送信
+        groupSocket.current?.send(String(num))
     }
 
     const handleSelectTurn = (num: number) => {
-        setSelectedTurn(num)
-        setLocalStrage(STRAGE_KEYS.TURN, String(num))
-
         // turnsocketを送信
+        turnSocket.current?.send(String(num))
     }
 
     const handleFinish = () => {
