@@ -12,11 +12,13 @@ import { useEffect, useRef, useState } from "react"
 import ReconnectingWebSocket from "reconnecting-websocket"
 
 export default function () {
-    const turnSocket = useRef<ReconnectingWebSocket>()
     const groupSocket = useRef<ReconnectingWebSocket>()
+    const turnSocket = useRef<ReconnectingWebSocket>()
+    const usersSocket = useRef<ReconnectingWebSocket>()
 
     const router = useRouter()
     const [user, setUser] = useState("")
+    const [users, setUsers] = useState<string[]>([])
     const [selectedTurn, setSelectedTurn] = useState(1)
     const [selectedGroup, setSelectedGroup] = useState(0)
     const [roomFlag, setRoomFlag] = useState(false)
@@ -30,8 +32,9 @@ export default function () {
         setTeamcode(generateRandomString())
         setUser(getLocalStrage(STRAGE_KEYS.USER_NAME))
 
-        groupSocket.current = new ReconnectingWebSocket("ws://localhost:8080/"+KEYS.GROUP)
-        turnSocket.current = new ReconnectingWebSocket("ws://localhost:8080/"+KEYS.TURN)
+        groupSocket.current = new ReconnectingWebSocket(URLS.WEB_SOCKET+KEYS.GROUP)
+        turnSocket.current = new ReconnectingWebSocket(URLS.WEB_SOCKET+KEYS.TURN)
+        usersSocket.current = new ReconnectingWebSocket(URLS.WEB_SOCKET+KEYS.USERS)
 
         groupSocket.current.onopen = () => {
             console.log("group open")
@@ -42,7 +45,7 @@ export default function () {
         }
 
         groupSocket.current.onmessage = (e) => {
-            console.log("group: "+e.data)
+            console.log("group:", e.data)
 
             setSelectedGroup(Number(e.data))
         }
@@ -56,24 +59,39 @@ export default function () {
         }
 
         turnSocket.current.onmessage = (e) => {
-            console.log("turn: "+e.data)
+            console.log("turn:", e.data)
 
             setSelectedTurn(Number(e.data))
             setLocalStrage(STRAGE_KEYS.TURN, e.data)
         }
 
+        usersSocket.current.onopen = () => {
+            console.log("users open")
+        }
+
+        usersSocket.current.onclose = () => {
+            console.log("users close")
+        }
+
+        usersSocket.current.onmessage = (e) => {
+            console.log("users:", e.data)
+
+            setUsers([...users, e.data])
+        }
+
         return () => {
             groupSocket.current?.close()
             turnSocket.current?.close()
+            usersSocket.current?.close()
         }
     }, [])
 
-    const strs = Array(6).fill("")
     const groups = ["1", "A", "B"]
 
     const handleSelectGroup = (num: number) => {
         // groupsocketを送信
         groupSocket.current?.send(String(num))
+        usersSocket.current?.send("admin")
     }
 
     const handleSelectTurn = (num: number) => {
@@ -84,6 +102,7 @@ export default function () {
     const handleFinish = () => {
         groupSocket.current?.close()
         turnSocket.current?.close()
+        usersSocket.current?.close()
         router.replace(URLS.HOME)
     }
 
@@ -98,12 +117,12 @@ export default function () {
                     <div className="flex flex-row justify-between h-full py-5">
                         <div className="flex justify-center bg-yellow-200 h-full w-4/5">
                             <div className="flex flex-col justify-between bg-yellow-500 space-y-1 h-full w-4/5">
-                                {strs.map((str, i) => (
+                                {Array.from({length: 6}).map((_, i) => (
                                     <div
                                         className="flex  bg-white w-full justify-center items-center rounded-xl h-full"
                                         key={i}
                                     >
-                                        {str}
+                                        {users[i]}
                                     </div>
                                 ))}
                             </div>

@@ -3,5 +3,6 @@ export const enum URLS {
     ROOM_SELECT = "/room-select",
     ROOM_SETTING = "/room-setting",
     GAME = "/game",
-    RESULT = "/result"
+    RESULT = "/result",
+    WEB_SOCKET = "ws://localhost:8080/"
 }

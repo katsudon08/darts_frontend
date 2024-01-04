@@ -1,4 +1,5 @@
 export const enum KEYS {
     GROUP = "group",
-    TURN = "turn"
+    TURN = "turn",
+    USERS = "users"
 }
