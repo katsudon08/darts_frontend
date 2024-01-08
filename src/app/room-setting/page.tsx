@@ -76,7 +76,8 @@ export default function () {
         usersSocket.current.onmessage = (e) => {
             console.log("users:", e.data)
 
-            setUsers([...users, e.data])
+            // ユーザーの追加を行いたい
+            setUsers([...users, "admin"])
         }
 
         return () => {
@@ -112,6 +113,7 @@ export default function () {
 
     return (
         <main>
+            {users}
             <div className="flex h-screen justify-center items-center  bg-lime-600">
                 <div className="flex flex-col justify-between h-full w-full  bg-red-700">
                     <div className="flex flex-row justify-between h-full py-5">
@@ -122,7 +124,7 @@ export default function () {
                                         className="flex  bg-white w-full justify-center items-center rounded-xl h-full"
                                         key={i}
                                     >
-                                        {users[i]}
+                                        {""}
                                     </div>
                                 ))}
                             </div>
