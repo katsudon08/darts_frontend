@@ -12,7 +12,6 @@ import { useEffect, useRef, useState } from "react"
 import ReconnectingWebSocket from "reconnecting-websocket"
 
 export default function () {
-    const groupSocket = useRef<ReconnectingWebSocket>()
     const turnSocket = useRef<ReconnectingWebSocket>()
     const usersSocket = useRef<ReconnectingWebSocket>()
 
@@ -68,7 +67,6 @@ export default function () {
         }
 
         return () => {
-            groupSocket.current?.close()
             turnSocket.current?.close()
             usersSocket.current?.close()
         }
@@ -88,7 +86,6 @@ export default function () {
     }
 
     const handleFinish = () => {
-        groupSocket.current?.close()
         turnSocket.current?.close()
         usersSocket.current?.close()
         router.replace(URLS.HOME)
