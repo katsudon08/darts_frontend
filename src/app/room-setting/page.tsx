@@ -25,6 +25,11 @@ export default function () {
 
     useEffect(() => {
         // localstrageの初期化よりも先に走らせる
+        turnSocket.current = new ReconnectingWebSocket(URLS.WEB_SOCKET+KEYS.TURN)
+        usersSocket.current = new ReconnectingWebSocket(URLS.WEB_SOCKET+KEYS.USERS)
+        // userリストの一覧取得
+        usersSocket.current?.send("")
+
         setRoomFlag(getLocalStrage(STRAGE_KEYS.ROOM_SELECT) === ROOM_SELECT.HOLD)
         setTeamcode(generateRandomString())
         setUser(getLocalStrage(STRAGE_KEYS.USER_NAME))
@@ -32,9 +37,6 @@ export default function () {
         initLocalStrage(STRAGE_KEYS.ROOM_SELECT)
         initLocalStrage(STRAGE_KEYS.TURN)
         initLocalStrage(STRAGE_KEYS.USER_NAME)
-
-        turnSocket.current = new ReconnectingWebSocket(URLS.WEB_SOCKET+KEYS.TURN)
-        usersSocket.current = new ReconnectingWebSocket(URLS.WEB_SOCKET+KEYS.USERS)
 
         turnSocket.current.onopen = () => {
             console.log("turn open")
@@ -61,7 +63,6 @@ export default function () {
 
         usersSocket.current.onmessage = (e) => {
             console.log("users:", e.data)
-
             // ユーザーの追加を行いたい
             setUsers(e.data.split(" "))
         }
@@ -76,8 +77,9 @@ export default function () {
 
     const handleSelectGroup = (num: number) => {
         setSelectedGroup(num)
+
         // usersSocketを送信
-        usersSocket.current?.send(`${groups[num] != groups[0] ? `${groups[num]}:${user}` : `${user}`}`)
+        if (user != "") usersSocket.current?.send(`${groups[num] != groups[0] ? `${groups[num]}:${user}` : `${user}`}`)
     }
 
     const handleSelectTurn = (num: number) => {
