@@ -1,9 +1,13 @@
-const TEXT = ({ text }: { text: string }) => {
+import { COLOR } from "@/types/color"
+
+const Text = ({ text, color }: { text: string, color: COLOR }) => {
     return (
-        <h1 className="whitespace-nowrap select-none text-4xl font-semibold">
-            {text}
-        </h1>
+        <div className={`text-${color}`}>
+            <h1 className="whitespace-nowrap select-none text-4xl font-semibold">
+                {text}
+            </h1>
+        </div>
     )
 }
 
-export default TEXT
+export default Text

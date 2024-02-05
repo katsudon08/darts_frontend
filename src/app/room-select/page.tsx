@@ -1,6 +1,7 @@
 "use client"
 
-import TEXT from "@/components/TEXT"
+import Text from "@/components/Text"
+import { COLOR } from "@/types/color"
 import { STRAGE_KEYS } from "@/types/localstrage"
 import { ROOM_SELECT } from "@/types/room-select"
 import { URLS } from "@/types/urls"
@@ -26,19 +27,19 @@ export default function () {
     }
 
     return (
-        <main className="flex h-screen justify-center items-center py-10 bg-lime-600">
+        <main className="flex h-screen justify-center items-center py-10 bg-gradient-to-b from-blue-400 to-blue-900">
             <div className="flex flex-col justify-between h-3/5 w-3/5">
                 <button
                     className="h-1/3 w-full rounded-md bg-white"
                     onClick={handleHold}
                 >
-                    <TEXT text="ルームを作成" />
+                    <Text text="ルームを作成" color={COLOR.BLACK} />
                 </button>
                 <button
                     className="h-1/3 w-full rounded-md bg-white"
                     onClick={handleJoin}
                 >
-                    <TEXT text="ルームに参加" />
+                    <Text text="ルームに参加" color={COLOR.BLACK} />
                 </button>
             </div>
         </main>

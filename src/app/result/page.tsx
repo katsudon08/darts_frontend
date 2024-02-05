@@ -1,6 +1,6 @@
 "use client"
 
-import TEXT from "@/components/TEXT"
+import Text from "@/components/Text"
 import { URLS } from "@/types/urls"
 import { useRouter } from "next/navigation"
 
@@ -35,7 +35,7 @@ export default function () {
                 </div>
                 <div className="flex justify-center items-center h-1/5 w-full bg-slate-500">
                     <button className="p-2 rounded-md bg-white" onClick={handleContinue}>
-                        <TEXT text="continue"/>
+                        <Text text="continue" />
                     </button>
                 </div>
             </div>
