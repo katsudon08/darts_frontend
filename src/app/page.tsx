@@ -9,7 +9,7 @@ import {
 } from "@/utils/localstrage"
 import { STRAGE_KEYS } from "@/types/localstrage"
 import { URLS } from "@/types/urls"
-import Text from "@/components/Text"
+import BoldText from "@/components/BoldText"
 import { COLOR } from "@/types/color"
 
 export default function Home() {
@@ -40,7 +40,7 @@ export default function Home() {
                         onChange={(e) => setText(e.target.value)}
                         onClick={(e) => e.stopPropagation()}
                     />
-                    <Text text="タップしてスタート" color={COLOR.WHITE} />
+                    <BoldText text="タップしてスタート" color={COLOR.WHITE} />
                 </div>
             </div>
         </main>

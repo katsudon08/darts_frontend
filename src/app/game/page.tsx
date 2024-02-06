@@ -1,6 +1,6 @@
 "use client"
 
-import Text from "@/components/Text"
+import BoldText from "@/components/BoldText"
 import { STRAGE_KEYS } from "@/types/localstrage"
 import { URLS } from "@/types/urls"
 import { getLocalStrage, initLocalStrage } from "@/utils/localstrage"
@@ -50,12 +50,12 @@ export default function () {
                 <div className="flex flex-col h-2/5 w-full bg-red-100">
                     <div className="absolute top-0 left-0 h-24 w-24 pt-1 pl-1">
                         <div className="flex justify-center items-center h-full w-full pl-2 scale-150">
-                            <Text text={String(turn)} />
+                            <BoldText text={String(turn)} />
                             <div className="scale-75 select-none pt-4">ターン</div>
                         </div>
                     </div>
                     <div className="bg-green-300 flex justify-center items-center h-3/5 w-full">
-                        <Text text="まつばら" />
+                        <BoldText text="まつばら" />
                     </div>
                     <div className="bg-green-200 flex flex-row h-2/5 w-full">
                         {Array.from({ length: 3 }).map((_, i) => (
@@ -64,7 +64,7 @@ export default function () {
                                 key={i}
                                 onClick={() => handleTimes(i + 1)}
                             >
-                                <Text text={"x" + String(i + 1)} />
+                                <BoldText text={"x" + String(i + 1)} />
                             </button>
                         ))}
                     </div>
@@ -74,7 +74,7 @@ export default function () {
                         <div className="flex flex-col justify-between h-full w-full">
                             <div className="flex flex-row justify-end pt-2 pr-2">
                                 <div className="h-20 w-20 flex justify-center items-center">
-                                    <Text text={String(score * times)} />
+                                    <BoldText text={String(score * times)} />
                                 </div>
                             </div>
                             <div className="flex flex-row justify-between pb-1 pl-1">
@@ -82,7 +82,7 @@ export default function () {
                                     className="flex justify-center items-center"
                                     onClick={handleReset}
                                 >
-                                    <Text text="リセット" />
+                                    <BoldText text="リセット" />
                                 </button>
                                 <button
                                     className="flex justify-center items-center h-16 w-16"
@@ -112,7 +112,7 @@ export default function () {
                                     className="flex justify-center h-full w-fit pt-2"
                                     onClick={(e) => handleScore(e, 20)}
                                 >
-                                    <Text text="20" />
+                                    <BoldText text="20" />
                                 </button>
                             </div>
                             <div className="absolute text-center top-1 h-40 w-10 -translate-y-full -translate-x-1.5 origin-bottom rotate-18">
@@ -121,7 +121,7 @@ export default function () {
                                     onClick={(e) => handleScore(e, 1)}
                                 >
                                     <span className="origin-center -rotate-18">
-                                        <Text text="1" />
+                                        <BoldText text="1" />
                                     </span>
                                 </button>
                             </div>
@@ -131,7 +131,7 @@ export default function () {
                                     onClick={(e) => handleScore(e, 18)}
                                 >
                                     <span className="origin-center -rotate-36">
-                                        <Text text="18" />
+                                        <BoldText text="18" />
                                     </span>
                                 </button>
                             </div>
@@ -141,7 +141,7 @@ export default function () {
                                     onClick={(e) => handleScore(e, 4)}
                                 >
                                     <span className="origin-center -rotate-54">
-                                        <Text text="4" />
+                                        <BoldText text="4" />
                                     </span>
                                 </button>
                             </div>
@@ -151,7 +151,7 @@ export default function () {
                                     onClick={(e) => handleScore(e, 13)}
                                 >
                                     <span className="origin-center -rotate-72">
-                                        <Text text="13" />
+                                        <BoldText text="13" />
                                     </span>
                                 </button>
                             </div>
@@ -161,7 +161,7 @@ export default function () {
                                     onClick={(e) => handleScore(e, 6)}
                                 >
                                     <span className="origin-center -rotate-90">
-                                        <Text text="6" />
+                                        <BoldText text="6" />
                                     </span>
                                 </button>
                             </div>
@@ -171,7 +171,7 @@ export default function () {
                                     onClick={(e) => handleScore(e, 10)}
                                 >
                                     <span className="origin-center -rotate-108">
-                                        <Text text="10" />
+                                        <BoldText text="10" />
                                     </span>
                                 </button>
                             </div>
@@ -181,7 +181,7 @@ export default function () {
                                     onClick={(e) => handleScore(e, 15)}
                                 >
                                     <span className="origin-center -rotate-126">
-                                        <Text text="15" />
+                                        <BoldText text="15" />
                                     </span>
                                 </button>
                             </div>
@@ -191,7 +191,7 @@ export default function () {
                                     onClick={(e) => handleScore(e, 2)}
                                 >
                                     <span className="origin-center -rotate-144">
-                                        <Text text="2" />
+                                        <BoldText text="2" />
                                     </span>
                                 </button>
                             </div>
@@ -201,7 +201,7 @@ export default function () {
                                     onClick={(e) => handleScore(e, 17)}
                                 >
                                     <span className="origin-center -rotate-162">
-                                        <Text text="17" />
+                                        <BoldText text="17" />
                                     </span>
                                 </button>
                             </div>
@@ -211,7 +211,7 @@ export default function () {
                                     onClick={(e) => handleScore(e, 3)}
                                 >
                                     <span className="origin-center -rotate-180">
-                                        <Text text="3" />
+                                        <BoldText text="3" />
                                     </span>
                                 </button>
                             </div>
@@ -221,7 +221,7 @@ export default function () {
                                     onClick={(e) => handleScore(e, 19)}
                                 >
                                     <span className="origin-center -rotate-198">
-                                        <Text text="19" />
+                                        <BoldText text="19" />
                                     </span>
                                 </button>
                             </div>
@@ -231,7 +231,7 @@ export default function () {
                                     onClick={(e) => handleScore(e, 7)}
                                 >
                                     <span className="origin-center -rotate-216">
-                                        <Text text="7" />
+                                        <BoldText text="7" />
                                     </span>
                                 </button>
                             </div>
@@ -241,7 +241,7 @@ export default function () {
                                     onClick={(e) => handleScore(e, 16)}
                                 >
                                     <span className="origin-center -rotate-234">
-                                        <Text text="16" />
+                                        <BoldText text="16" />
                                     </span>
                                 </button>
                             </div>
@@ -251,7 +251,7 @@ export default function () {
                                     onClick={(e) => handleScore(e, 8)}
                                 >
                                     <span className="origin-center -rotate-252">
-                                        <Text text="8" />
+                                        <BoldText text="8" />
                                     </span>
                                 </button>
                             </div>
@@ -261,7 +261,7 @@ export default function () {
                                     onClick={(e) => handleScore(e, 11)}
                                 >
                                     <span className="origin-center -rotate-270">
-                                        <Text text="11" />
+                                        <BoldText text="11" />
                                     </span>
                                 </button>
                             </div>
@@ -271,7 +271,7 @@ export default function () {
                                     onClick={(e) => handleScore(e, 14)}
                                 >
                                     <span className="origin-center -rotate-288">
-                                        <Text text="14" />
+                                        <BoldText text="14" />
                                     </span>
                                 </button>
                             </div>
@@ -281,7 +281,7 @@ export default function () {
                                     onClick={(e) => handleScore(e, 9)}
                                 >
                                     <span className="origin-center -rotate-306">
-                                        <Text text="9" />
+                                        <BoldText text="9" />
                                     </span>
                                 </button>
                             </div>
@@ -291,7 +291,7 @@ export default function () {
                                     onClick={(e) => handleScore(e, 12)}
                                 >
                                     <span className="origin-center -rotate-324">
-                                        <Text text="12" />
+                                        <BoldText text="12" />
                                     </span>
                                 </button>
                             </div>
@@ -301,7 +301,7 @@ export default function () {
                                     onClick={(e) => handleScore(e, 5)}
                                 >
                                     <span className="origin-center -rotate-342">
-                                        <Text text="5" />
+                                        <BoldText text="5" />
                                     </span>
                                 </button>
                             </div>

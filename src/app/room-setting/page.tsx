@@ -1,6 +1,6 @@
 "use client"
 
-import Text from "@/components/Text"
+import BoldText from "@/components/BoldText"
 import { COLOR } from "@/types/color"
 import { STRAGE_KEYS } from "@/types/localstrage"
 import { ROOM_SELECT } from "@/types/room-select"
@@ -148,7 +148,7 @@ export default function () {
                                     key={i}
                                     onClick={() => handleSelectGroup(i)}
                                 >
-                                    <Text text={v} color={COLOR.BLACK} />
+                                    <BoldText text={v} color={COLOR.BLACK} />
                                 </button>
                             ))}
                         </div>
@@ -160,7 +160,7 @@ export default function () {
                                 チームコード
                             </div>
                             <div className="flex justify-center items-center h-full w-full bg-gray-50">
-                                <Text
+                                <BoldText
                                     text={
                                         teamcode === ""
                                             ? "loading..."
@@ -183,14 +183,14 @@ export default function () {
                                     key={i}
                                     onClick={() => handleSelectTurn(i + 1)}
                                 >
-                                    <Text text={String(i + 1)} color={COLOR.BLACK} />
+                                    <BoldText text={String(i + 1)} color={COLOR.BLACK} />
                                     <div className="select-none">ターン</div>
                                 </button>
                             ))}
                         </div>
                         <div className="flex justify-center items-center h-full w-full">
                             <button className="bg-blue-600 py-2 px-8 rounded-md w-full md:w-1/4" onClick={handleFinish}>
-                                <Text text="ゲーム終了" color={COLOR.WHITE} />
+                                <BoldText text="ゲーム終了" color={COLOR.WHITE} />
                             </button>
                         </div>
                         <div className="flex justify-center items-center h-full w-full">
@@ -199,7 +199,7 @@ export default function () {
                                     className="bg-blue-600 py-2 px-4 rounded-md w-full md:w-1/4"
                                     onClick={handleContinue}
                                 >
-                                    <Text text="ゲームスタート" color={COLOR.WHITE} />
+                                    <BoldText text="ゲームスタート" color={COLOR.WHITE} />
                                 </button>
                             }
                         </div>
