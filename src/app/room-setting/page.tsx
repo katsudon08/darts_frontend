@@ -156,7 +156,7 @@ export default function () {
                     <div className="flex flex-col justify-between items-center h-full space-y-2 py-5 px-10">
                         {/* チームコード表示 */}
                         <div className="relative h-full w-full md:w-3/4 rounded-sm border-2 border-slate-400 shadow-md">
-                            <div className="absolute top-0.5 left-1 -translate-y-2/3 bg-gray-50 px-2">
+                            <div className="absolute top-0.5 left-1 -translate-y-2/3 bg-gray-50 px-2 font-semibold">
                                 チームコード
                             </div>
                             <div className="flex justify-center items-center h-full w-full bg-gray-50">
