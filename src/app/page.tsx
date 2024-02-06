@@ -32,10 +32,10 @@ export default function Home() {
                 className="flex h-screen justify-center items-center pt-10 bg-gradient-to-b from-blue-400 to-blue-900"
                 onClick={handleClick}
             >
-                <div className="flex flex-col justify-between pt-10 h-2/5">
+                <div className="flex flex-col justify-between items-center pt-10 h-2/5">
                     <input
-                        type="text"
-                        className="py-4 px-2 text-xl h-1/3 w-full rounded-lg"
+                        type="username"
+                        className="p-2 h-1/3 w-full rounded-md text-xl shadow-md"
                         value={text}
                         onChange={(e) => setText(e.target.value)}
                         onClick={(e) => e.stopPropagation()}

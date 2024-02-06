@@ -35,13 +35,13 @@ export default function () {
             {isModalWindowDisplay && <ModalWindow hideModalWindowDisplay={hideModalWindowDisplay}/>}
             <div className="flex flex-col justify-between h-3/5 w-4/5 md:w-3/5">
                 <button
-                    className="h-1/3 w-full rounded-md bg-white"
+                    className="h-1/3 w-full rounded-md bg-white shadow-md"
                     onClick={handleHold}
                 >
                     <BoldText text="ルームを作成" color={COLOR.BLACK} />
                 </button>
                 <button
-                    className="h-1/3 w-full rounded-md bg-white"
+                    className="h-1/3 w-full rounded-md bg-white shadow-md"
                     onClick={handleJoin}
                 >
                     <BoldText text="ルームに参加" color={COLOR.BLACK} />

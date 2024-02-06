@@ -141,9 +141,9 @@ export default function () {
                                     className={
                                         selectedGroup === i
                                             ?
-                                            "bg-slate-300 border border-slate-400 rounded-xl h-full mx-2 py-3"
+                                            "bg-slate-300 border border-slate-400 rounded-xl h-full mx-2 py-3 shadow-xl"
                                             :
-                                            "bg-white border border-slate-400 rounded-xl h-full mx-2 py-3"
+                                            "bg-white border border-slate-400 rounded-xl h-full mx-2 py-3 shadow-xl"
                                     }
                                     key={i}
                                     onClick={() => handleSelectGroup(i)}
@@ -155,7 +155,7 @@ export default function () {
                     </div>
                     <div className="flex flex-col justify-between items-center h-full space-y-2 py-5 px-10">
                         {/* チームコード表示 */}
-                        <div className="relative h-full w-full md:w-3/4 rounded-sm border-2 border-slate-400">
+                        <div className="relative h-full w-full md:w-3/4 rounded-sm border-2 border-slate-400 shadow-md">
                             <div className="absolute top-0.5 left-1 -translate-y-2/3 bg-gray-50 px-2">
                                 チームコード
                             </div>
@@ -176,9 +176,9 @@ export default function () {
                                     className={
                                         i + 1 === selectedTurn
                                             ?
-                                            "bg-slate-300 border border-slate-400 h-full w-full rounded-xl"
+                                            "bg-slate-300 border border-slate-400 h-full w-full rounded-xl shadow-xl"
                                             :
-                                            "bg-white border border-slate-400 h-full w-full rounded-xl"
+                                            "bg-white border border-slate-400 h-full w-full rounded-xl shadow-xl"
                                     }
                                     key={i}
                                     onClick={() => handleSelectTurn(i + 1)}
@@ -189,14 +189,17 @@ export default function () {
                             ))}
                         </div>
                         <div className="flex justify-center items-center h-full w-full">
-                            <button className="bg-blue-600 py-2 px-8 rounded-md w-full md:w-1/4" onClick={handleFinish}>
+                            <button
+                                className="bg-blue-600 py-2 px-8 rounded-md w-full md:w-1/4 shadow-xl"
+                                onClick={handleFinish}
+                            >
                                 <BoldText text="ゲーム終了" color={COLOR.WHITE} />
                             </button>
                         </div>
                         <div className="flex justify-center items-center h-full w-full">
                             {roomFlag &&
                                 <button
-                                    className="bg-blue-600 py-2 px-4 rounded-md w-full md:w-1/4"
+                                    className="bg-blue-600 py-2 px-4 rounded-md w-full md:w-1/4 shadow-xl"
                                     onClick={handleContinue}
                                 >
                                     <BoldText text="ゲームスタート" color={COLOR.WHITE} />
