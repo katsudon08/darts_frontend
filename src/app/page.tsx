@@ -10,7 +10,7 @@ import {
 import { STRAGE_KEYS } from "@/types/localstrage"
 import { URLS } from "@/types/urls"
 import BoldText from "@/components/BoldText"
-import { COLOR } from "@/types/color"
+import { TEXT_COLOR } from "@/types/color"
 
 export default function Home() {
     const router = useRouter()
@@ -40,7 +40,9 @@ export default function Home() {
                         onChange={(e) => setText(e.target.value)}
                         onClick={(e) => e.stopPropagation()}
                     />
-                    <BoldText text="タップしてスタート" color={COLOR.WHITE} />
+                    <BoldText color={TEXT_COLOR.WHITE}>
+                        タップしてスタート
+                    </BoldText>
                 </div>
             </div>
         </main>

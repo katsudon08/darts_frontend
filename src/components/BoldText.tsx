@@ -1,17 +1,17 @@
-import { COLOR } from "@/types/color"
+import { TEXT_COLOR } from "@/types/color"
 
-const BoldText = ({ text, color }: { text: string, color: COLOR }) => {
+const BoldText = ({ color, children }: { color: TEXT_COLOR, children: React.ReactNode }) => {
     switch (color) {
-        case COLOR.BLACK:
+        case TEXT_COLOR.BLACK:
             return (
                 <h1 className="whitespace-nowrap select-none text-3xl font-semibold">
-                    {text}
+                    {children}
                 </h1>
             )
-        case COLOR.WHITE:
+        case TEXT_COLOR.WHITE:
             return (
                 <h1 className="whitespace-nowrap select-none text-3xl font-semibold text-white">
-                    {text}
+                    {children}
                 </h1>
             )
     }

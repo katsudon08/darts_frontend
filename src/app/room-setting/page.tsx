@@ -1,7 +1,7 @@
 "use client"
 
 import BoldText from "@/components/BoldText"
-import { COLOR } from "@/types/color"
+import { TEXT_COLOR } from "@/types/color"
 import { STRAGE_KEYS } from "@/types/localstrage"
 import { ROOM_SELECT } from "@/types/room-select"
 import { URLS } from "@/types/urls"
@@ -148,7 +148,9 @@ export default function () {
                                     key={i}
                                     onClick={() => handleSelectGroup(i)}
                                 >
-                                    <BoldText text={v} color={COLOR.BLACK} />
+                                    <BoldText color={TEXT_COLOR.BLACK}>
+                                        {v}
+                                    </BoldText>
                                 </button>
                             ))}
                         </div>
@@ -160,14 +162,9 @@ export default function () {
                                 チームコード
                             </div>
                             <div className="flex justify-center items-center h-full w-full bg-gray-50">
-                                <BoldText
-                                    text={
-                                        teamcode === ""
-                                            ? "loading..."
-                                            : teamcode
-                                    }
-                                    color={COLOR.BLACK}
-                                />
+                                <BoldText color={TEXT_COLOR.BLACK}>
+                                    {teamcode === "" ? "loading..." : teamcode}
+                                </BoldText>
                             </div>
                         </div>
                         <div className="flex justify-between md:px-10 px-2 md:space-x-10 space-x-4 h-full w-full md:w-3/4">
@@ -183,7 +180,9 @@ export default function () {
                                     key={i}
                                     onClick={() => handleSelectTurn(i + 1)}
                                 >
-                                    <BoldText text={String(i + 1)} color={COLOR.BLACK} />
+                                    <BoldText color={TEXT_COLOR.BLACK}>
+                                        {String(i + 1)}
+                                    </BoldText>
                                     <div className="select-none">ターン</div>
                                 </button>
                             ))}
@@ -193,7 +192,9 @@ export default function () {
                                 className="bg-blue-600 py-2 px-8 rounded-md w-full md:w-1/4 shadow-xl"
                                 onClick={handleFinish}
                             >
-                                <BoldText text="ゲーム終了" color={COLOR.WHITE} />
+                                <BoldText color={TEXT_COLOR.WHITE}>
+                                    ゲーム終了
+                                </BoldText>
                             </button>
                         </div>
                         <div className="flex justify-center items-center h-full w-full">
@@ -202,7 +203,9 @@ export default function () {
                                     className="bg-blue-600 py-2 px-4 rounded-md w-full md:w-1/4 shadow-xl"
                                     onClick={handleContinue}
                                 >
-                                    <BoldText text="ゲームスタート" color={COLOR.WHITE} />
+                                    <BoldText color={TEXT_COLOR.WHITE}>
+                                        ゲームスタート
+                                    </BoldText>
                                 </button>
                             }
                         </div>

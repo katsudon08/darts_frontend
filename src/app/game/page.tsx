@@ -1,6 +1,8 @@
 "use client"
 
 import BoldText from "@/components/BoldText"
+import DartsButton from "@/components/DartsButton"
+import { TEXT_COLOR } from "@/types/color"
 import { STRAGE_KEYS } from "@/types/localstrage"
 import { URLS } from "@/types/urls"
 import { getLocalStrage, initLocalStrage } from "@/utils/localstrage"
@@ -13,6 +15,7 @@ export default function () {
     const [score, setScore] = useState(0)
     const [turn, setTurn] = useState(1)
     const [times, setTimes] = useState(1)
+    const dartsScores = [20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5]
 
     useEffect(() => {
         initLocalStrage(STRAGE_KEYS.TURN)
@@ -50,12 +53,16 @@ export default function () {
                 <div className="flex flex-col h-2/5 w-full bg-red-100">
                     <div className="absolute top-0 left-0 h-24 w-24 pt-1 pl-1">
                         <div className="flex justify-center items-center h-full w-full pl-2 scale-150">
-                            <BoldText text={String(turn)} />
+                            <BoldText color={TEXT_COLOR.BLACK}>
+                                {String(turn)}
+                            </BoldText>
                             <div className="scale-75 select-none pt-4">ターン</div>
                         </div>
                     </div>
                     <div className="bg-green-300 flex justify-center items-center h-3/5 w-full">
-                        <BoldText text="まつばら" />
+                        <BoldText color={TEXT_COLOR.BLACK}>
+                            まつばら
+                        </BoldText>
                     </div>
                     <div className="bg-green-200 flex flex-row h-2/5 w-full">
                         {Array.from({ length: 3 }).map((_, i) => (
@@ -64,7 +71,9 @@ export default function () {
                                 key={i}
                                 onClick={() => handleTimes(i + 1)}
                             >
-                                <BoldText text={"x" + String(i + 1)} />
+                                <BoldText color={TEXT_COLOR.BLACK}>
+                                    {"x" + String(i + 1)}
+                                </BoldText>
                             </button>
                         ))}
                     </div>
@@ -74,7 +83,9 @@ export default function () {
                         <div className="flex flex-col justify-between h-full w-full">
                             <div className="flex flex-row justify-end pt-2 pr-2">
                                 <div className="h-20 w-20 flex justify-center items-center">
-                                    <BoldText text={String(score * times)} />
+                                    <BoldText color={TEXT_COLOR.BLACK}>
+                                        {String(score * times)}
+                                    </BoldText>
                                 </div>
                             </div>
                             <div className="flex flex-row justify-between pb-1 pl-1">
@@ -82,7 +93,9 @@ export default function () {
                                     className="flex justify-center items-center"
                                     onClick={handleReset}
                                 >
-                                    <BoldText text="リセット" />
+                                    <BoldText color={TEXT_COLOR.BLACK}>
+                                        リセット
+                                    </BoldText>
                                 </button>
                                 <button
                                     className="flex justify-center items-center h-16 w-16"
@@ -106,205 +119,15 @@ export default function () {
                                 : "flex flex-col justify-center items-center h-80 w-80 invisible"
                         }
                     >
+                        {/* ダーツ板のUI */}
                         <div className="relative translate-y-1/4 h-5 w-5">
-                            <div className="absolute top-1 h-40 w-8 -translate-y-full -translate-x-3">
-                                <button
-                                    className="flex justify-center h-full w-fit pt-2"
-                                    onClick={(e) => handleScore(e, 20)}
-                                >
-                                    <BoldText text="20" />
-                                </button>
-                            </div>
-                            <div className="absolute text-center top-1 h-40 w-10 -translate-y-full -translate-x-1.5 origin-bottom rotate-18">
-                                <button
-                                    className="flex justify-center h-full w-full pt-2"
-                                    onClick={(e) => handleScore(e, 1)}
-                                >
-                                    <span className="origin-center -rotate-18">
-                                        <BoldText text="1" />
-                                    </span>
-                                </button>
-                            </div>
-                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-36">
-                                <button
-                                    className="flex justify-center h-full w-full pt-2"
-                                    onClick={(e) => handleScore(e, 18)}
-                                >
-                                    <span className="origin-center -rotate-36">
-                                        <BoldText text="18" />
-                                    </span>
-                                </button>
-                            </div>
-                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-54">
-                                <button
-                                    className="flex justify-center h-full w-full pt-2"
-                                    onClick={(e) => handleScore(e, 4)}
-                                >
-                                    <span className="origin-center -rotate-54">
-                                        <BoldText text="4" />
-                                    </span>
-                                </button>
-                            </div>
-                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-72">
-                                <button
-                                    className="flex justify-center h-full w-full pt-2"
-                                    onClick={(e) => handleScore(e, 13)}
-                                >
-                                    <span className="origin-center -rotate-72">
-                                        <BoldText text="13" />
-                                    </span>
-                                </button>
-                            </div>
-                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-90">
-                                <button
-                                    className="flex justify-center h-full w-full pt-2"
-                                    onClick={(e) => handleScore(e, 6)}
-                                >
-                                    <span className="origin-center -rotate-90">
-                                        <BoldText text="6" />
-                                    </span>
-                                </button>
-                            </div>
-                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-108">
-                                <button
-                                    className="flex justify-center h-full w-full pt-2"
-                                    onClick={(e) => handleScore(e, 10)}
-                                >
-                                    <span className="origin-center -rotate-108">
-                                        <BoldText text="10" />
-                                    </span>
-                                </button>
-                            </div>
-                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-126">
-                                <button
-                                    className="flex justify-center h-full w-full pt-2"
-                                    onClick={(e) => handleScore(e, 15)}
-                                >
-                                    <span className="origin-center -rotate-126">
-                                        <BoldText text="15" />
-                                    </span>
-                                </button>
-                            </div>
-                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-144">
-                                <button
-                                    className="flex justify-center h-full w-full pt-2"
-                                    onClick={(e) => handleScore(e, 2)}
-                                >
-                                    <span className="origin-center -rotate-144">
-                                        <BoldText text="2" />
-                                    </span>
-                                </button>
-                            </div>
-                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-162">
-                                <button
-                                    className="flex justify-center h-full w-full pt-2"
-                                    onClick={(e) => handleScore(e, 17)}
-                                >
-                                    <span className="origin-center -rotate-162">
-                                        <BoldText text="17" />
-                                    </span>
-                                </button>
-                            </div>
-                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-180">
-                                <button
-                                    className="flex justify-center h-full w-full pt-2"
-                                    onClick={(e) => handleScore(e, 3)}
-                                >
-                                    <span className="origin-center -rotate-180">
-                                        <BoldText text="3" />
-                                    </span>
-                                </button>
-                            </div>
-                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-198">
-                                <button
-                                    className="flex justify-center h-full w-full pt-2"
-                                    onClick={(e) => handleScore(e, 19)}
-                                >
-                                    <span className="origin-center -rotate-198">
-                                        <BoldText text="19" />
-                                    </span>
-                                </button>
-                            </div>
-                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-216">
-                                <button
-                                    className="flex justify-center h-full w-full pt-2"
-                                    onClick={(e) => handleScore(e, 7)}
-                                >
-                                    <span className="origin-center -rotate-216">
-                                        <BoldText text="7" />
-                                    </span>
-                                </button>
-                            </div>
-                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-234">
-                                <button
-                                    className="flex justify-center h-full w-full pt-2"
-                                    onClick={(e) => handleScore(e, 16)}
-                                >
-                                    <span className="origin-center -rotate-234">
-                                        <BoldText text="16" />
-                                    </span>
-                                </button>
-                            </div>
-                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-252">
-                                <button
-                                    className="flex justify-center h-full w-full pt-2"
-                                    onClick={(e) => handleScore(e, 8)}
-                                >
-                                    <span className="origin-center -rotate-252">
-                                        <BoldText text="8" />
-                                    </span>
-                                </button>
-                            </div>
-                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-270">
-                                <button
-                                    className="flex justify-center h-full w-full pt-2"
-                                    onClick={(e) => handleScore(e, 11)}
-                                >
-                                    <span className="origin-center -rotate-270">
-                                        <BoldText text="11" />
-                                    </span>
-                                </button>
-                            </div>
-                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-288">
-                                <button
-                                    className="flex justify-center h-full w-full pt-2"
-                                    onClick={(e) => handleScore(e, 14)}
-                                >
-                                    <span className="origin-center -rotate-288">
-                                        <BoldText text="14" />
-                                    </span>
-                                </button>
-                            </div>
-                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-306">
-                                <button
-                                    className="flex justify-center h-full w-full pt-2"
-                                    onClick={(e) => handleScore(e, 9)}
-                                >
-                                    <span className="origin-center -rotate-306">
-                                        <BoldText text="9" />
-                                    </span>
-                                </button>
-                            </div>
-                            <div className="absolute text-center top-1 h-40 w-12 -translate-y-full -translate-x-3 origin-bottom rotate-324">
-                                <button
-                                    className="flex justify-center h-full w-full pt-2"
-                                    onClick={(e) => handleScore(e, 12)}
-                                >
-                                    <span className="origin-center -rotate-324">
-                                        <BoldText text="12" />
-                                    </span>
-                                </button>
-                            </div>
-                            <div className="absolute text-center top-1 h-40 w-8 -translate-y-full -translate-x-2 origin-bottom rotate-342">
-                                <button
-                                    className="flex justify-center h-full w-full pt-2"
-                                    onClick={(e) => handleScore(e, 5)}
-                                >
-                                    <span className="origin-center -rotate-342">
-                                        <BoldText text="5" />
-                                    </span>
-                                </button>
-                            </div>
+                            {Array.from({length: 20}).map((_, i) => (
+                                <DartsButton rotate={i*18} dartsScore={dartsScores[i]} clickEvent={handleScore} key={i}>
+                                    <BoldText color={TEXT_COLOR.BLACK} key={i}>
+                                        {dartsScores[i]}
+                                    </BoldText>
+                                </DartsButton>
+                            ))}
                         </div>
 
                         <div className="absolute visible h-32 w-32 rounded-full bg-red-400">

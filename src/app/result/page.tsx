@@ -1,6 +1,7 @@
 "use client"
 
 import BoldText from "@/components/BoldText"
+import { TEXT_COLOR } from "@/types/color"
 import { URLS } from "@/types/urls"
 import { useRouter } from "next/navigation"
 
@@ -35,7 +36,9 @@ export default function () {
                 </div>
                 <div className="flex justify-center items-center h-1/5 w-full bg-slate-500">
                     <button className="p-2 rounded-md bg-white" onClick={handleContinue}>
-                        <BoldText text="continue" />
+                        <BoldText color={TEXT_COLOR.BLACK}>
+                            continue
+                        </BoldText>
                     </button>
                 </div>
             </div>
