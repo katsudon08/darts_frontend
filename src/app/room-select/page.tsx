@@ -31,7 +31,7 @@ export default function () {
     }
 
     return (
-        <main className="flex h-screen justify-center items-center py-10 bg-gradient-to-b from-blue-400 to-blue-900">
+        <main className="flex h-screen justify-center items-center py-10 bg-gradient-to-b from-blue-400 to-purple-800">
             {isModalWindowDisplay && <ModalWindow hideModalWindowDisplay={hideModalWindowDisplay} />}
             <div className="flex flex-col justify-between h-3/5 w-4/5 md:w-3/5">
                 <button

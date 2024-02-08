@@ -29,7 +29,7 @@ export default function Home() {
     return (
         <main>
             <div
-                className="flex h-screen justify-center items-center pt-10 bg-gradient-to-b from-blue-400 to-blue-900"
+                className="flex h-screen justify-center items-center pt-10 bg-gradient-to-b from-blue-400 to-purple-800"
                 onClick={handleClick}
             >
                 <div className="flex flex-col justify-between items-center pt-10 h-2/5">
@@ -41,7 +41,7 @@ export default function Home() {
                         onClick={(e) => e.stopPropagation()}
                     />
                     <BoldText color={TEXT_COLOR.WHITE}>
-                        タップしてスタート
+                        <div className="opacity-80">タップしてスタート</div>
                     </BoldText>
                 </div>
             </div>

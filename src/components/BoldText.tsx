@@ -14,6 +14,12 @@ const BoldText = ({ color, children }: { color: TEXT_COLOR, children: React.Reac
                     {children}
                 </h1>
             )
+        case TEXT_COLOR.BLUE:
+            return (
+                <h1 className="whitespace-nowrap select-none text-3xl font-semibold text-blue-600">
+                    {children}
+                </h1>
+            );
     }
 }
 
