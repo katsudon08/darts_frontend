@@ -15,29 +15,44 @@ export default function () {
     }
 
     return (
-        <main className="flex h-screen justify-center items-center py-10 bg-lime-600">
-            <div className="flex flex-col justify-between h-full w-full bg-red-100">
-                <div className="flex flex-col md:flex-row h-4/5 w-full px-4 bg-blue-100">
-                    <div className="flex flex-col justirfy-between h-full w-full bg-red-500">
-                        <div className="flex justify-center h-full w-full items-center bg-green-500">among us</div>
-                        <div className="flex justify-center h-full w-full items-center bg-green-600">among us</div>
-                        <div className="flex justify-center h-full w-full items-center bg-green-700">among us</div>
+        <main>
+            <div className="h-screen w-full flex flex-col p-2 bg-gradient-to-b from-blue-400 to-purple-800">
+                <div className="h-[87%] md:h-4/5 w-full flex flex-col md:flex-row space-y-2 md:space-y-0 md:py-2">
+                    <div className="h-full w-full flex flex-col justify-between space-y-1 md:space-y-2 md:py-2">
+                        <div className="h-fit w-full flex flex-row bg-gray-50 rounded-md border border-slate-400 shadow-md">
+                            <div className="h-full w-1/4 text-center select-none font-semibold">RANK</div>
+                            <div className="h-full w-3/4 border-l-2 border-r-2 md:border-r-1 border-slate-300 text-center select-none font-semibold">TEAM</div>
+                            <div className="h-full w-2/4 border-l-1 border-r-2 border-slate-300 select-none font-semibold hidden md:flex md:justify-center">MEMBER</div>
+                            <div className="h-full w-1/4 text-center select-none font-semibold">POINT</div>
+                        </div>
+                        {Array.from({ length: 3 }).map((_, i) => (
+                            <div className="h-full w-full flex flex-row bg-gray-50 rounded-md border border-slate-400 shadow-md" key={i}>
+                                <div className="h-full w-1/4" key={i}></div>
+                                <div className="h-full w-3/4 border-l-2 border-r-2 md:border-r-1 border-slate-300" key={i}></div>
+                                <div className="h-full w-2/4 border-l-1 border-r-2 border-slate-300 hidden md:flex" key={i}></div>
+                                <div className="h-full w-1/4" key={i}></div>
+                            </div>
+                        ))}
                     </div>
-                    <div className="flex flex-col justify-between h-full w-full space-y-1 bg-yellow-500">
-                        {strs.map((str, i) => (
-                            <div
-                                className="flex  bg-white w-full justify-center items-center rounded-xl h-full"
-                                key={i}
-                            >
-                                {str}
+                    <div className="h-full w-full flex flex-col space-y-1 md:hidden">
+                        <div className="h-fit w-full flex flex-row bg-gray-50 rounded-md border border-slate-400 shadow-md">
+                            <div className="h-full w-1/4 text-center select-none font-semibold">TEAM</div>
+                            <div className="h-full w-3/4 border-l-2 border-r-2 border-slate-300 text-center select-none font-semibold">MEMBER</div>
+                            <div className="h-full w-1/4 text-center select-none font-semibold">POINT</div>
+                        </div>
+                        {Array.from({ length: 3 }).map((_, i) => (
+                            <div className="h-full w-full flex flex-row bg-gray-50 rounded-md border border-slate-400 shadow-md" key={i}>
+                                <div className="h-full w-1/4" key={i}></div>
+                                <div className="h-full w-3/4 border-l-2 border-r-2 border-slate-300" key={i}></div>
+                                <div className="h-full w-1/4" key={i}></div>
                             </div>
                         ))}
                     </div>
                 </div>
-                <div className="flex justify-center items-center h-1/5 w-full bg-slate-500">
-                    <button className="p-2 rounded-md bg-white" onClick={handleContinue}>
+                <div className="h-[13%] md:h-1/5 w-full flex justify-end items-center px-2">
+                    <button className="p-2 bg-gray-100 w-1/3 md:w-1/5 rounded-lg shadow-xl" onClick={handleContinue}>
                         <BoldText color={TEXT_COLOR.BLACK}>
-                            continue
+                            終了
                         </BoldText>
                     </button>
                 </div>
