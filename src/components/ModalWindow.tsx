@@ -1,12 +1,11 @@
 "use client"
 
-import { useRouter } from "next/navigation";
 import { TEXT_COLOR } from "@/types/color";
 import BoldText from "./BoldText";
-import { URLS } from "@/types/urls";
+import { useState } from "react";
 
-const ModalWindow = ({ hideModalWindowDisplay }: { hideModalWindowDisplay: () => void }) => {
-    const router = useRouter()
+const ModalWindow = ({ hideModalWindowDisplay, clickEvent }: { hideModalWindowDisplay: () => void, clickEvent: (data: string) => void }) => {
+    const [text, setText] = useState("")
 
     return (
         <>
@@ -17,10 +16,12 @@ const ModalWindow = ({ hideModalWindowDisplay }: { hideModalWindowDisplay: () =>
                         id="teamcode"
                         type="text"
                         className="border border-slate-500 w-full md:w-3/4 p-2 rounded-md text-xl"
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}
                     />
                     <button
                         className="bg-blue-700 w-2/5 md:w-1/3 py-2 rounded-md"
-                        onClick={() => router.push(URLS.ROOM_SETTING)}
+                        onClick={() => clickEvent(text)}
                     >
                         <BoldText color={TEXT_COLOR.WHITE}>
                             参加

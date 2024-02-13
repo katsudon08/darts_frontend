@@ -3,9 +3,11 @@
 import BoldText from "@/components/BoldText"
 import ModalWindow from "@/components/ModalWindow"
 import { TEXT_COLOR } from "@/types/color"
+import { HTTP_KEYS } from "@/types/http"
 import { STRAGE_KEYS } from "@/types/localstrage"
 import { ROOM_SELECT } from "@/types/room-select"
 import { URLS } from "@/types/urls"
+import { generateRandomString } from "@/utils/generateRandomString"
 import { initLocalStrage, setLocalStrage } from "@/utils/localstrage"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -16,13 +18,69 @@ export default function () {
     // 即時関数にすることで子コンポーネントに渡した際の無限レンダリングを防いでいる
     const hideModalWindowDisplay = (): void => setIsModalWindowDisplay(false)
 
+    const createTeamCode = async () => {
+        const response = await fetch(URLS.API + HTTP_KEYS.TEAM_CODE_CREATE, {
+            method: "POST",
+            cache: "no-store",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                teamcode: generateRandomString()
+            })
+        })
+
+        if (!response.ok) {
+            throw new Error("チームコードの作成に失敗しました.")
+        }
+
+        const teamcode = await response.json()
+        console.log(teamcode)
+
+        if (Boolean(teamcode)) {
+            setLocalStrage(STRAGE_KEYS.TEAM_CODE, teamcode)
+            router.push(URLS.ROOM_SETTING)
+        } else {
+            // TODO: エラー表示
+        }
+    }
+
+    const joinTeamCode = async (data: string) => {
+        console.log("data", data)
+
+        const response = await fetch(URLS.API + HTTP_KEYS.TEAM_CODE_JOIN, {
+            method: "POST",
+            cache: "no-store",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                teamcode: data
+            })
+        })
+
+        if (!response.ok) {
+            throw new Error("チームへの参加に失敗しました.")
+        }
+
+        const teamcode = await response.json()
+        console.log(teamcode)
+
+        if (Boolean(teamcode)) {
+            setLocalStrage(STRAGE_KEYS.TEAM_CODE, teamcode)
+            router.push(URLS.ROOM_SETTING)
+        } else {
+            // TODO: エラー表示
+        }
+    }
+
     useEffect(() => {
         initLocalStrage(STRAGE_KEYS.ROOM_SELECT)
     }, [])
 
     const handleHold = () => {
         setLocalStrage(STRAGE_KEYS.ROOM_SELECT, ROOM_SELECT.HOLD)
-        router.push(URLS.ROOM_SETTING)
+        createTeamCode()
     }
 
     const handleJoin = () => {
@@ -32,7 +90,7 @@ export default function () {
 
     return (
         <main className="flex h-screen justify-center items-center py-10 bg-gradient-to-b from-blue-400 to-purple-800">
-            {isModalWindowDisplay && <ModalWindow hideModalWindowDisplay={hideModalWindowDisplay} />}
+            {isModalWindowDisplay && <ModalWindow hideModalWindowDisplay={hideModalWindowDisplay} clickEvent={joinTeamCode} />}
             <div className="flex flex-col justify-between h-3/5 w-4/5 md:w-3/5">
                 <button
                     className="h-1/3 w-full rounded-md bg-white shadow-md"

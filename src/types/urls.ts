@@ -4,5 +4,7 @@ export const enum URLS {
     ROOM_SETTING = "/room-setting",
     GAME = "/game",
     RESULT = "/result",
-    WEB_SOCKET = "ws://localhost:8080/"
+    API = "/api/",
+    WEB_SOCKET = "ws://localhost:8080/",
+    HTTP = "http://localhost:8080/"
 }

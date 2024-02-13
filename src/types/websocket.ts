@@ -1,5 +1,4 @@
-export const enum KEYS {
+export const enum SOCKET_KEYS {
     TURN = "turn",
-    TEAM_CODE = "team-code",
     USERS = "users"
 }
