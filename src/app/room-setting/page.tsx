@@ -27,20 +27,20 @@ export default function () {
     const [teamcode, setTeamcode] = useState("")
 
     useEffect(() => {
+        initLocalStrage(STRAGE_KEYS.ROOM_SELECT)
+        initLocalStrage(STRAGE_KEYS.TURN)
+        initLocalStrage(STRAGE_KEYS.USER_NAME)
+
+        setRoomFlag(getLocalStrage(STRAGE_KEYS.ROOM_SELECT) === ROOM_SELECT.HOLD)
+        setTeamcode(getLocalStrage(STRAGE_KEYS.TEAM_CODE))
+        setUser(getLocalStrage(STRAGE_KEYS.USER_NAME))
+
         // localstrageの初期化よりも先に走らせる
         turnSocket.current = new ReconnectingWebSocket(URLS.WEB_SOCKET + SOCKET_KEYS.TURN)
         // teamcodeSocket.current = new ReconnectingWebSocket(URLS.WEB_SOCKET + KEYS.TEAM_CODE)
         usersSocket.current = new ReconnectingWebSocket(URLS.WEB_SOCKET + SOCKET_KEYS.USERS)
         // userリストの一覧取得
         usersSocket.current?.send("")
-
-        setRoomFlag(getLocalStrage(STRAGE_KEYS.ROOM_SELECT) === ROOM_SELECT.HOLD)
-        setTeamcode(getLocalStrage(STRAGE_KEYS.TEAM_CODE))
-        setUser(getLocalStrage(STRAGE_KEYS.USER_NAME))
-
-        initLocalStrage(STRAGE_KEYS.ROOM_SELECT)
-        initLocalStrage(STRAGE_KEYS.TURN)
-        initLocalStrage(STRAGE_KEYS.USER_NAME)
 
         turnSocket.current.onopen = () => {
             console.log("turn open")
@@ -88,7 +88,7 @@ export default function () {
 
     const handleSelectTurn = (num: number) => {
         // turnsocketを送信
-        turnSocket.current?.send(String(num))
+        turnSocket.current?.send(`${teamcode}[:::]${num}`)
     }
 
     const handleFinish = () => {
