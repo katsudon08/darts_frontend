@@ -9,6 +9,7 @@ import { URLS } from "@/types/urls"
 import { SOCKET_KEYS } from "@/types/websocket"
 import { generateRandomString } from "@/utils/generateRandomString"
 import { getLocalStrage, initLocalStrage, setLocalStrage } from "@/utils/localstrage"
+import { turnSocketMessage } from "@/utils/sendWebSocketMessage"
 import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import ReconnectingWebSocket from "reconnecting-websocket"
@@ -88,7 +89,7 @@ export default function () {
 
     const handleSelectTurn = (num: number) => {
         // turnsocketを送信
-        turnSocket.current?.send(`${teamcode}[:::]${num}`)
+        turnSocket.current?.send(turnSocketMessage(teamcode, num))
     }
 
     const handleFinish = () => {
