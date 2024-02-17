@@ -35,7 +35,7 @@ export default function () {
         }
 
         const teamcode = await response.json()
-        console.log(teamcode)
+        console.log("page_teamcode:", teamcode)
 
         if (Boolean(teamcode)) {
             setLocalStrage(STRAGE_KEYS.TEAM_CODE, teamcode)
@@ -64,7 +64,7 @@ export default function () {
         }
 
         const teamcode = await response.json()
-        console.log(teamcode)
+        console.log("page_teamcode:", teamcode)
 
         if (Boolean(teamcode)) {
             setLocalStrage(STRAGE_KEYS.TEAM_CODE, teamcode)

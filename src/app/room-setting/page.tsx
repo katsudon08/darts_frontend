@@ -139,50 +139,56 @@ export default function () {
                             ))}
                         </div>
                     </div>
-                    <div className="flex flex-col justify-between items-center h-full space-y-2 py-5 px-10">
+                    <div className="flex flex-col justify-between items-center h-full py-5 px-10">
                         {/* チームコード表示 */}
-                        <div className="relative h-full w-full md:w-3/4 rounded-sm border-2 border-slate-400 shadow-md">
-                            <div className="absolute top-0.5 left-1 -translate-y-2/3 bg-gray-50 px-2 font-semibold">
-                                チームコード
+                        <div className="flex flex-col justify-between items-center h-full w-full py-2 md:py-1 space-y-2">
+                            <div className="flex justify-center items-center h-full w-full">
+                                <div className="relative h-full w-full md:w-3/4 rounded-sm border-2 border-slate-400 shadow-md">
+                                    <div className="absolute top-0.5 left-1 -translate-y-2/3 bg-gray-50 px-2 font-semibold">
+                                        チームコード
+                                    </div>
+                                    <div className="flex justify-center items-center h-full w-full bg-gray-50">
+                                        <BoldText color={TEXT_COLOR.BLACK}>
+                                            {teamcode === "" ? "loading..." : teamcode}
+                                        </BoldText>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="flex justify-center items-center h-full w-full bg-gray-50">
-                                <BoldText color={TEXT_COLOR.BLACK}>
-                                    {teamcode === "" ? "loading..." : teamcode}
-                                </BoldText>
+                            <div className="flex justify-between md:px-10 px-2 md:space-x-10 space-x-4 h-full w-full md:w-3/4">
+                                {Array.from({ length: 3 }).map((_, i) => (
+                                    <button
+                                        className={
+                                            i + 1 === selectedTurn
+                                                ?
+                                                "bg-slate-300 border border-slate-400 h-full w-full rounded-xl shadow-xl"
+                                                :
+                                                "bg-white border border-slate-400 h-full w-full rounded-xl shadow-xl"
+                                        }
+                                        key={i}
+                                        onClick={() => handleSelectTurn(i + 1)}
+                                    >
+                                        <BoldText color={TEXT_COLOR.BLACK}>
+                                            {String(i + 1)}
+                                        </BoldText>
+                                        <div className="select-none">ターン</div>
+                                    </button>
+                                ))}
                             </div>
                         </div>
-                        <div className="flex justify-between md:px-10 px-2 md:space-x-10 space-x-4 h-full w-full md:w-3/4">
-                            {Array.from({ length: 3 }).map((_, i) => (
+                        <div className="flex flex-col justify-between items-center h-full w-full">
+                            <div className="flex justify-center items-center h-full w-full">
                                 <button
-                                    className={
-                                        i + 1 === selectedTurn
-                                            ?
-                                            "bg-slate-300 border border-slate-400 h-full w-full rounded-xl shadow-xl"
-                                            :
-                                            "bg-white border border-slate-400 h-full w-full rounded-xl shadow-xl"
-                                    }
-                                    key={i}
-                                    onClick={() => handleSelectTurn(i + 1)}
+                                    className="bg-blue-600 py-2 px-8 rounded-md w-full md:w-1/4 shadow-xl"
+                                    onClick={handleFinish}
                                 >
-                                    <BoldText color={TEXT_COLOR.BLACK}>
-                                        {String(i + 1)}
+                                    <BoldText color={TEXT_COLOR.WHITE}>
+                                        ゲーム終了
                                     </BoldText>
-                                    <div className="select-none">ターン</div>
                                 </button>
-                            ))}
-                        </div>
-                        <div className="flex justify-center items-center h-full w-full">
-                            <button
-                                className="bg-blue-600 py-2 px-8 rounded-md w-full md:w-1/4 shadow-xl"
-                                onClick={handleFinish}
-                            >
-                                <BoldText color={TEXT_COLOR.WHITE}>
-                                    ゲーム終了
-                                </BoldText>
-                            </button>
-                        </div>
-                        <div className="flex justify-center items-center h-full w-full">
-                            {roomFlag &&
+                            </div>
+                            <div className={
+                                roomFlag ? "flex justify-center items-center h-full w-full" : "hidden"
+                            }>
                                 <button
                                     className="bg-blue-600 py-2 px-4 rounded-md w-full md:w-1/4 shadow-xl"
                                     onClick={handleContinue}
@@ -191,7 +197,7 @@ export default function () {
                                         ゲームスタート
                                     </BoldText>
                                 </button>
-                            }
+                            </div>
                         </div>
                     </div>
                 </div>
