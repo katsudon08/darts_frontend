@@ -2,12 +2,10 @@
 
 import BoldText from "@/components/BoldText"
 import { TEXT_COLOR } from "@/types/color"
-import { HTTP_KEYS } from "@/types/http"
 import { STRAGE_KEYS } from "@/types/localstrage"
 import { ROOM_SELECT } from "@/types/room-select"
 import { URLS } from "@/types/urls"
 import { SOCKET_KEYS } from "@/types/websocket"
-import { generateRandomString } from "@/utils/generateRandomString"
 import { getLocalStrage, initLocalStrage, setLocalStrage } from "@/utils/localstrage"
 import { turnSocketMessage } from "@/utils/sendWebSocketMessage"
 import { useRouter } from "next/navigation"
@@ -23,9 +21,12 @@ export default function () {
     const [user, setUser] = useState("")
     const [users, setUsers] = useState<string[]>([])
     const [selectedTurn, setSelectedTurn] = useState(1)
-    const [selectedGroup, setSelectedGroup] = useState(0)
+    const [selectedGroupNumber, setSelectedGroupNumber] = useState(0)
     const [roomFlag, setRoomFlag] = useState(false)
     const [teamcode, setTeamcode] = useState("")
+
+    const groups = ["redButton", "blueButton", "greenButton"]
+    const selectedGroups = ["selectedRedButton", "selectedBlueButton", "selectedGreenButton"]
 
     useEffect(() => {
         initLocalStrage(STRAGE_KEYS.ROOM_SELECT)
@@ -78,13 +79,11 @@ export default function () {
         }
     }, [])
 
-    const groups = ["A", "B", "C"]
-
     const handleSelectGroup = (num: number) => {
-        setSelectedGroup(num)
+        setSelectedGroupNumber(num)
 
         // usersSocketを送信
-        if (user != "") usersSocket.current?.send(`${groups[num]}:${user}`)
+        if (user !== "") usersSocket.current?.send(user)
     }
 
     const handleSelectTurn = (num: number) => {
@@ -120,22 +119,14 @@ export default function () {
                             </div>
                         </div>
                         <div className="flex flex-col justify-between space-y-3 h-full w-1/4 md:w-1/5">
-                            {groups.map((v, i) => (
+                            {Array.from({ length: 3 }).map((_, i) => (
                                 <button
                                     className={
-                                        selectedGroup === i
-                                            ?
-                                            "bg-slate-300 border border-slate-400 rounded-xl h-full mx-2 py-3 shadow-xl"
-                                            :
-                                            "bg-white border border-slate-400 rounded-xl h-full mx-2 py-3 shadow-xl"
+                                        selectedGroupNumber === i ? selectedGroups[i] : groups[i]
                                     }
                                     key={i}
                                     onClick={() => handleSelectGroup(i)}
-                                >
-                                    <BoldText color={TEXT_COLOR.BLACK}>
-                                        {v}
-                                    </BoldText>
-                                </button>
+                                />
                             ))}
                         </div>
                     </div>
