@@ -42,6 +42,7 @@ export default function () {
             router.push(URLS.ROOM_SETTING)
         } else {
             // TODO: エラー表示
+            throw new Error()
         }
     }
 
@@ -71,6 +72,7 @@ export default function () {
             router.push(URLS.ROOM_SETTING)
         } else {
             // TODO: エラー表示
+            throw new Error()
         }
     }
 

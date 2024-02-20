@@ -1,13 +1,16 @@
 "use client"
 
 import BoldText from "@/components/BoldText"
+import User from "@/components/User"
 import { TEXT_COLOR } from "@/types/color"
 import { STRAGE_KEYS } from "@/types/localstrage"
 import { ROOM_SELECT } from "@/types/room-select"
 import { URLS } from "@/types/urls"
+import { UserData } from "@/types/user"
 import { SOCKET_KEYS } from "@/types/websocket"
 import { getLocalStrage, initLocalStrage, setLocalStrage } from "@/utils/localstrage"
-import { turnSocketMessage } from "@/utils/sendWebSocketMessage"
+import { changeUsersMessageToUsersData } from "@/utils/receiveWebSocketMessage"
+import { getTurnData, getUsersData, turnSocketMessage, usersSocketMessage } from "@/utils/sendWebSocketMessage"
 import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import ReconnectingWebSocket from "reconnecting-websocket"
@@ -19,9 +22,9 @@ export default function () {
 
     const router = useRouter()
     const [user, setUser] = useState("")
-    const [users, setUsers] = useState<string[]>([])
-    const [selectedTurn, setSelectedTurn] = useState(1)
-    const [selectedGroupNumber, setSelectedGroupNumber] = useState(0)
+    const [users, setUsers] = useState<UserData[]>([])
+    const [selectedTurn, setSelectedTurn] = useState<number>()
+    const [selectedGroupNumber, setSelectedGroupNumber] = useState<number>()
     const [roomFlag, setRoomFlag] = useState(false)
     const [teamcode, setTeamcode] = useState("")
 
@@ -46,6 +49,7 @@ export default function () {
 
         turnSocket.current.onopen = () => {
             console.log("turn open")
+            turnSocket.current?.send(getTurnData(getLocalStrage(STRAGE_KEYS.TEAM_CODE)))
         }
 
         turnSocket.current.onclose = () => {
@@ -55,12 +59,14 @@ export default function () {
         turnSocket.current.onmessage = (e) => {
             console.log("turn:", e.data)
 
-            setSelectedTurn(Number(e.data))
+            const tmp = (e.data === "") ? "1" : e.data
+            setSelectedTurn(Number(tmp))
             setLocalStrage(STRAGE_KEYS.TURN, e.data)
         }
 
         usersSocket.current.onopen = () => {
             console.log("users open")
+            usersSocket.current?.send(getUsersData(getLocalStrage(STRAGE_KEYS.TEAM_CODE)))
         }
 
         usersSocket.current.onclose = () => {
@@ -70,7 +76,8 @@ export default function () {
         usersSocket.current.onmessage = (e) => {
             console.log("users:", e.data)
             // ユーザーの追加を行いたい
-            setUsers(e.data.split(" "))
+            console.log("usersData", changeUsersMessageToUsersData(e.data))
+            setUsers(changeUsersMessageToUsersData(e.data))
         }
 
         return () => {
@@ -83,7 +90,7 @@ export default function () {
         setSelectedGroupNumber(num)
 
         // usersSocketを送信
-        if (user !== "") usersSocket.current?.send(user)
+        if (user !== "") usersSocket.current?.send(usersSocketMessage(teamcode, num, user))
     }
 
     const handleSelectTurn = (num: number) => {
@@ -109,12 +116,7 @@ export default function () {
                         <div className="flex justify-center h-full w-3/4 md:w-4/5">
                             <div className="flex flex-col justify-between space-y-1 h-full w-5/6">
                                 {Array.from({ length: 6 }).map((_, i) => (
-                                    <div
-                                        className="flex  bg-white w-full justify-center items-center rounded-xl border border-gray-300 h-full"
-                                        key={i}
-                                    >
-                                        {users[i]}
-                                    </div>
+                                    <User user={users[i]} />
                                 ))}
                             </div>
                         </div>
@@ -131,18 +133,16 @@ export default function () {
                         </div>
                     </div>
                     <div className="flex flex-col justify-between items-center h-full py-5 px-10">
-                        {/* チームコード表示 */}
                         <div className="flex flex-col justify-between items-center h-full w-full py-2 md:py-1 space-y-2">
-                            <div className="flex justify-center items-center h-full w-full">
-                                <div className="relative h-full w-full md:w-3/4 rounded-sm border-2 border-slate-400 shadow-md">
-                                    <div className="absolute top-0.5 left-1 -translate-y-2/3 bg-gray-50 px-2 font-semibold">
-                                        チームコード
-                                    </div>
-                                    <div className="flex justify-center items-center h-full w-full bg-gray-50">
-                                        <BoldText color={TEXT_COLOR.BLACK}>
-                                            {teamcode === "" ? "loading..." : teamcode}
-                                        </BoldText>
-                                    </div>
+                            {/* チームコード表示 */}
+                            <div className="relative h-full w-full md:w-3/4 rounded-sm border-2 border-slate-400 shadow-md">
+                                <div className="absolute top-0.5 left-1 -translate-y-2/3 bg-gray-50 px-2 font-semibold">
+                                    チームコード
+                                </div>
+                                <div className="flex justify-center items-center h-full w-full bg-gray-50">
+                                    <BoldText color={TEXT_COLOR.BLACK}>
+                                        {teamcode === "" ? "loading..." : teamcode}
+                                    </BoldText>
                                 </div>
                             </div>
                             <div className="flex justify-between md:px-10 px-2 md:space-x-10 space-x-4 h-full w-full md:w-3/4">
