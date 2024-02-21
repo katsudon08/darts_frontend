@@ -17,3 +17,8 @@ export const usersSocketMessage = (teamcode: string, num: number, msg: string): 
 export const getUsersData = (teamcode: string): string => {
     return teamcode
 }
+
+export const deleteUserData = (teamcode: string): string => {
+    const result = `${teamcode}${MARK.CONNECTION}`
+    return result
+}

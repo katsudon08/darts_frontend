@@ -10,7 +10,7 @@ import { UserData } from "@/types/user"
 import { SOCKET_KEYS } from "@/types/websocket"
 import { getLocalStrage, initLocalStrage, setLocalStrage } from "@/utils/localstrage"
 import { changeUsersMessageToUsersData } from "@/utils/receiveWebSocketMessage"
-import { getTurnData, getUsersData, turnSocketMessage, usersSocketMessage } from "@/utils/sendWebSocketMessage"
+import { deleteUserData, getTurnData, getUsersData, turnSocketMessage, usersSocketMessage } from "@/utils/sendWebSocketMessage"
 import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import ReconnectingWebSocket from "reconnecting-websocket"
@@ -99,6 +99,7 @@ export default function () {
     }
 
     const handleFinish = () => {
+        usersSocket.current?.send(deleteUserData(teamcode))
         turnSocket.current?.close()
         usersSocket.current?.close()
         router.replace(URLS.HOME)
