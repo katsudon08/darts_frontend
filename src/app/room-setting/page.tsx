@@ -1,6 +1,7 @@
 "use client"
 
 import BoldText from "@/components/BoldText"
+import PopUp from "@/components/PopUp"
 import User from "@/components/User"
 import { TEXT_COLOR } from "@/types/color"
 import { STRAGE_KEYS } from "@/types/localstrage"
@@ -17,7 +18,6 @@ import ReconnectingWebSocket from "reconnecting-websocket"
 
 export default function () {
     const turnSocket = useRef<ReconnectingWebSocket>()
-    // const teamcodeSocket = useRef<ReconnectingWebSocket>()
     const usersSocket = useRef<ReconnectingWebSocket>()
 
     const router = useRouter()
@@ -27,6 +27,7 @@ export default function () {
     const [selectedGroupNumber, setSelectedGroupNumber] = useState<number>()
     const [roomFlag, setRoomFlag] = useState(false)
     const [teamcode, setTeamcode] = useState("")
+    const [isPopUpWindow, setIsPopUpWindow] = useState(false)
 
     const groups = ["redButton", "blueButton", "greenButton"]
     const selectedGroups = ["selectedRedButton", "selectedBlueButton", "selectedGreenButton"]
@@ -42,7 +43,6 @@ export default function () {
 
         // localstrageの初期化よりも先に走らせる
         turnSocket.current = new ReconnectingWebSocket(URLS.WEB_SOCKET + SOCKET_KEYS.TURN)
-        // teamcodeSocket.current = new ReconnectingWebSocket(URLS.WEB_SOCKET + KEYS.TEAM_CODE)
         usersSocket.current = new ReconnectingWebSocket(URLS.WEB_SOCKET + SOCKET_KEYS.USERS)
         // userリストの一覧取得
         usersSocket.current?.send("")
@@ -75,9 +75,17 @@ export default function () {
 
         usersSocket.current.onmessage = (e) => {
             console.log("users:", e.data)
+
             // ユーザーの追加を行いたい
-            console.log("usersData", changeUsersMessageToUsersData(e.data))
-            setUsers(changeUsersMessageToUsersData(e.data))
+            const usersData = changeUsersMessageToUsersData(e.data)
+            console.log("usersData:", usersData)
+            console.log("boolean:", Boolean(usersData))
+
+            if (usersData) {
+                setUsers(usersData)
+            } else {
+                setIsPopUpWindow(true)
+            }
         }
 
         return () => {
@@ -110,86 +118,89 @@ export default function () {
     }
 
     return (
-        <main>
-            <div className="flex h-screen justify-center items-center bg-gray-50">
-                <div className="flex flex-col justify-between h-full w-full">
-                    <div className="flex flex-row justify-between h-full py-5 pr-5">
-                        <div className="flex justify-center h-full w-3/4 md:w-4/5">
-                            <div className="flex flex-col justify-between space-y-1 h-full w-5/6">
-                                {Array.from({ length: 6 }).map((_, i) => (
-                                    <User user={users[i]} />
-                                ))}
-                            </div>
-                        </div>
-                        <div className="flex flex-col justify-between space-y-3 h-full w-1/4 md:w-1/5">
-                            {Array.from({ length: 3 }).map((_, i) => (
-                                <button
-                                    className={
-                                        selectedGroupNumber === i ? selectedGroups[i] : groups[i]
-                                    }
-                                    key={i}
-                                    onClick={() => handleSelectGroup(i)}
-                                />
+        <main className="flex h-screen justify-center items-center bg-gray-50">
+            {isPopUpWindow &&
+                <PopUp>
+                    チーム人数が上限を超えました
+                </PopUp>
+            }
+            <div className="flex flex-col justify-between h-full w-full">
+                <div className="flex flex-row justify-between h-full py-5 pr-5">
+                    <div className="flex justify-center h-full w-3/4 md:w-4/5">
+                        <div className="flex flex-col justify-between space-y-1 h-full w-5/6">
+                            {Array.from({ length: 6 }).map((_, i) => (
+                                <User user={users[i]} />
                             ))}
                         </div>
                     </div>
-                    <div className="flex flex-col justify-between items-center h-full py-5 px-10">
-                        <div className="flex flex-col justify-between items-center h-full w-full py-2 md:py-1 space-y-2">
-                            {/* チームコード表示 */}
-                            <div className="relative h-full w-full md:w-3/4 rounded-sm border-2 border-slate-400 shadow-md">
-                                <div className="absolute top-0.5 left-1 -translate-y-2/3 bg-gray-50 px-2 font-semibold">
-                                    チームコード
-                                </div>
-                                <div className="flex justify-center items-center h-full w-full bg-gray-50">
-                                    <BoldText color={TEXT_COLOR.BLACK}>
-                                        {teamcode === "" ? "loading..." : teamcode}
-                                    </BoldText>
-                                </div>
+                    <div className="flex flex-col justify-between space-y-3 h-full w-1/4 md:w-1/5">
+                        {Array.from({ length: 3 }).map((_, i) => (
+                            <button
+                                className={
+                                    selectedGroupNumber === i ? selectedGroups[i] : groups[i]
+                                }
+                                key={i}
+                                onClick={() => handleSelectGroup(i)}
+                            />
+                        ))}
+                    </div>
+                </div>
+                <div className="flex flex-col justify-between items-center h-full py-5 px-10">
+                    <div className="flex flex-col justify-between items-center h-full w-full py-2 md:py-1 space-y-2">
+                        {/* チームコード表示 */}
+                        <div className="relative h-full w-full md:w-3/4 rounded-sm border-2 border-slate-400 shadow-md">
+                            <div className="absolute top-0.5 left-1 -translate-y-2/3 bg-gray-50 px-2 font-semibold">
+                                チームコード
                             </div>
-                            <div className="flex justify-between md:px-10 px-2 md:space-x-10 space-x-4 h-full w-full md:w-3/4">
-                                {Array.from({ length: 3 }).map((_, i) => (
-                                    <button
-                                        className={
-                                            i + 1 === selectedTurn
-                                                ?
-                                                "bg-slate-300 border border-slate-400 h-full w-full rounded-xl shadow-xl"
-                                                :
-                                                "bg-white border border-slate-400 h-full w-full rounded-xl shadow-xl"
-                                        }
-                                        key={i}
-                                        onClick={() => handleSelectTurn(i + 1)}
-                                    >
-                                        <BoldText color={TEXT_COLOR.BLACK}>
-                                            {String(i + 1)}
-                                        </BoldText>
-                                        <div className="select-none">ターン</div>
-                                    </button>
-                                ))}
+                            <div className="flex justify-center items-center h-full w-full bg-gray-50">
+                                <BoldText color={TEXT_COLOR.BLACK}>
+                                    {teamcode === "" ? "loading..." : teamcode}
+                                </BoldText>
                             </div>
                         </div>
-                        <div className="flex flex-col justify-between items-center h-full w-full">
-                            <div className="flex justify-center items-center h-full w-full">
+                        <div className="flex justify-between md:px-10 px-2 md:space-x-10 space-x-4 h-full w-full md:w-3/4">
+                            {Array.from({ length: 3 }).map((_, i) => (
                                 <button
-                                    className="bg-blue-600 py-2 px-8 rounded-md w-full md:w-1/4 shadow-xl"
-                                    onClick={handleFinish}
+                                    className={
+                                        i + 1 === selectedTurn
+                                            ?
+                                            "bg-slate-300 border border-slate-400 h-full w-full rounded-xl shadow-xl"
+                                            :
+                                            "bg-white border border-slate-400 h-full w-full rounded-xl shadow-xl"
+                                    }
+                                    key={i}
+                                    onClick={() => handleSelectTurn(i + 1)}
                                 >
-                                    <BoldText color={TEXT_COLOR.WHITE}>
-                                        ゲーム終了
+                                    <BoldText color={TEXT_COLOR.BLACK}>
+                                        {String(i + 1)}
                                     </BoldText>
+                                    <div className="select-none">ターン</div>
                                 </button>
-                            </div>
-                            <div className={
-                                roomFlag ? "flex justify-center items-center h-full w-full" : "hidden"
-                            }>
-                                <button
-                                    className="bg-blue-600 py-2 px-4 rounded-md w-full md:w-1/4 shadow-xl"
-                                    onClick={handleContinue}
-                                >
-                                    <BoldText color={TEXT_COLOR.WHITE}>
-                                        ゲームスタート
-                                    </BoldText>
-                                </button>
-                            </div>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="flex flex-col justify-between items-center h-full w-full">
+                        <div className="flex justify-center items-center h-full w-full">
+                            <button
+                                className="bg-blue-600 py-2 px-8 rounded-md w-full md:w-1/4 shadow-xl"
+                                onClick={handleFinish}
+                            >
+                                <BoldText color={TEXT_COLOR.WHITE}>
+                                    ゲーム終了
+                                </BoldText>
+                            </button>
+                        </div>
+                        <div className={
+                            roomFlag ? "flex justify-center items-center h-full w-full" : "hidden"
+                        }>
+                            <button
+                                className="bg-blue-600 py-2 px-4 rounded-md w-full md:w-1/4 shadow-xl"
+                                onClick={handleContinue}
+                            >
+                                <BoldText color={TEXT_COLOR.WHITE}>
+                                    ゲームスタート
+                                </BoldText>
+                            </button>
                         </div>
                     </div>
                 </div>
