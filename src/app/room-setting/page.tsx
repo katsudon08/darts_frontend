@@ -82,7 +82,6 @@ export default function () {
             const usersData = changeUsersMessageToUsersData(e.data)
             console.log("usersData:", usersData)
             console.log("boolean:", Boolean(usersData))
-            console.log("string", String(usersData))
 
             if (usersData) {
                 setUsers(usersData)

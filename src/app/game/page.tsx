@@ -5,11 +5,15 @@ import DartsButton from "@/components/DartsButton"
 import { TEXT_COLOR } from "@/types/color"
 import { STRAGE_KEYS } from "@/types/localstrage"
 import { URLS } from "@/types/urls"
+import { SOCKET_KEYS } from "@/types/websocket"
 import { getLocalStrage, initLocalStrage } from "@/utils/localstrage"
 import { useRouter } from "next/navigation"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
+import ReconnectingWebSocket from "reconnecting-websocket"
 
 export default function () {
+    const gameScoket = useRef<ReconnectingWebSocket>()
+
     const router = useRouter()
     const [isActive, setIsActive] = useState(false)
     const [score, setScore] = useState(0)
@@ -20,6 +24,26 @@ export default function () {
 
     useEffect(() => {
         initLocalStrage(STRAGE_KEYS.TURN)
+        initLocalStrage(STRAGE_KEYS.USERS)
+        initLocalStrage(STRAGE_KEYS.USER_NAME)
+
+        gameScoket.current = new ReconnectingWebSocket(URLS.WEB_SOCKET + SOCKET_KEYS.GAME)
+
+        gameScoket.current.onopen = () => {
+            console.log("game open")
+        }
+
+        gameScoket.current.onclose = () => {
+            console.log("game close")
+        }
+
+        gameScoket.current.onmessage = (e) => {
+            console.log(e.data)
+        }
+
+        return () => {
+            gameScoket.current?.close()
+        }
     }, [])
 
     const handleScore = (e: React.MouseEvent, num: number) => {
@@ -158,6 +182,8 @@ export default function () {
                         </div>
                     </div>
                 </div>
+                {/* 画面操作の無効化 */}
+                <div className="absolute h-screen w-full z-50"/>
             </div>
         </main>
     )
