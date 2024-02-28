@@ -9,6 +9,7 @@ import { ROOM_SELECT } from "@/types/room-select"
 import { URLS } from "@/types/urls"
 import { UserData } from "@/types/user"
 import { SOCKET_KEYS } from "@/types/websocket"
+import { createMessageFromUsers } from "@/utils/createMessageFromUsers"
 import { getLocalStrage, initLocalStrage, setLocalStrage } from "@/utils/localstrage"
 import { changeUsersMessageToUsersData } from "@/utils/receiveWebSocketMessage"
 import { deleteUserData, getTurnData, getUsersData, turnSocketMessage, usersSocketMessage } from "@/utils/sendWebSocketMessage"
@@ -36,6 +37,7 @@ export default function () {
         initLocalStrage(STRAGE_KEYS.ROOM_SELECT)
         initLocalStrage(STRAGE_KEYS.TURN)
         initLocalStrage(STRAGE_KEYS.USER_NAME)
+        initLocalStrage(STRAGE_KEYS.USERS)
 
         setRoomFlag(getLocalStrage(STRAGE_KEYS.ROOM_SELECT) === ROOM_SELECT.HOLD)
         setTeamcode(getLocalStrage(STRAGE_KEYS.TEAM_CODE))
@@ -80,9 +82,11 @@ export default function () {
             const usersData = changeUsersMessageToUsersData(e.data)
             console.log("usersData:", usersData)
             console.log("boolean:", Boolean(usersData))
+            console.log("string", String(usersData))
 
             if (usersData) {
                 setUsers(usersData)
+                setLocalStrage(STRAGE_KEYS.USERS, createMessageFromUsers(usersData))
             } else {
                 setIsPopUpWindow(true)
             }
@@ -129,7 +133,7 @@ export default function () {
                     <div className="flex justify-center h-full w-3/4 md:w-4/5">
                         <div className="flex flex-col justify-between space-y-1 h-full w-5/6">
                             {Array.from({ length: 6 }).map((_, i) => (
-                                <User user={users[i]} />
+                                <User user={users[i]} key={i}/>
                             ))}
                         </div>
                     </div>
@@ -180,16 +184,6 @@ export default function () {
                         </div>
                     </div>
                     <div className="flex flex-col justify-between items-center h-full w-full">
-                        <div className="flex justify-center items-center h-full w-full">
-                            <button
-                                className="bg-blue-600 py-2 px-8 rounded-md w-full md:w-1/4 shadow-xl"
-                                onClick={handleFinish}
-                            >
-                                <BoldText color={TEXT_COLOR.WHITE}>
-                                    ゲーム終了
-                                </BoldText>
-                            </button>
-                        </div>
                         <div className={
                             roomFlag ? "flex justify-center items-center h-full w-full" : "hidden"
                         }>
@@ -199,6 +193,16 @@ export default function () {
                             >
                                 <BoldText color={TEXT_COLOR.WHITE}>
                                     ゲームスタート
+                                </BoldText>
+                            </button>
+                        </div>
+                        <div className="flex justify-center items-center h-full w-full">
+                            <button
+                                className="bg-blue-600 py-2 px-8 rounded-md w-full md:w-1/4 shadow-xl"
+                                onClick={handleFinish}
+                            >
+                                <BoldText color={TEXT_COLOR.WHITE}>
+                                    ゲーム終了
                                 </BoldText>
                             </button>
                         </div>

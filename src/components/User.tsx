@@ -2,7 +2,7 @@ import { UserData } from "@/types/user";
 import React from "react";
 
 const User = ({ user }: { user: UserData }) => {
-    if (user === undefined) {
+    if (user === undefined || user.groupNum === "") {
         return (
             <div className="flex  bg-white w-full justify-center items-center rounded-xl border text-lg font-semibold border-gray-300 h-full" />
         );
