@@ -37,6 +37,7 @@ export default function () {
         initLocalStrage(STRAGE_KEYS.ROOM_SELECT)
         initLocalStrage(STRAGE_KEYS.TURN)
         initLocalStrage(STRAGE_KEYS.USER_NAME)
+        initLocalStrage(STRAGE_KEYS.USER_GROUP)
         initLocalStrage(STRAGE_KEYS.USERS)
 
         setRoomFlag(getLocalStrage(STRAGE_KEYS.ROOM_SELECT) === ROOM_SELECT.HOLD)
@@ -99,6 +100,7 @@ export default function () {
 
     const handleSelectGroup = (num: number) => {
         setSelectedGroupNumber(num)
+        setLocalStrage(STRAGE_KEYS.USER_GROUP, String(num))
 
         // usersSocketを送信
         if (user !== "") usersSocket.current?.send(usersSocketMessage(teamcode, num, user))

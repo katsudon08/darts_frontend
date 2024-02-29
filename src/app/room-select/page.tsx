@@ -9,6 +9,7 @@ import { STRAGE_KEYS } from "@/types/localstrage"
 import { ROOM_SELECT } from "@/types/room-select"
 import { URLS } from "@/types/urls"
 import { generateRandomString } from "@/utils/generateRandomString"
+import { generateUUID } from "@/utils/generateUUID"
 import { initLocalStrage, setLocalStrage } from "@/utils/localstrage"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -81,6 +82,9 @@ export default function () {
 
     useEffect(() => {
         initLocalStrage(STRAGE_KEYS.ROOM_SELECT)
+        initLocalStrage(STRAGE_KEYS.USER_ID)
+
+        setLocalStrage(STRAGE_KEYS.USER_ID, generateUUID())
     }, [])
 
     const handleHold = () => {

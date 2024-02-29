@@ -3,10 +3,12 @@
 import BoldText from "@/components/BoldText"
 import DartsButton from "@/components/DartsButton"
 import { TEXT_COLOR } from "@/types/color"
+import { GameData } from "@/types/game"
 import { STRAGE_KEYS } from "@/types/localstrage"
 import { URLS } from "@/types/urls"
 import { SOCKET_KEYS } from "@/types/websocket"
 import { getLocalStrage, initLocalStrage } from "@/utils/localstrage"
+import { gameSocketMessage } from "@/utils/sendWebSocketMessage"
 import { useRouter } from "next/navigation"
 import React, { useEffect, useRef, useState } from "react"
 import ReconnectingWebSocket from "reconnecting-websocket"
@@ -19,13 +21,15 @@ export default function () {
     const [score, setScore] = useState(0)
     const [turn, setTurn] = useState(1)
     const [times, setTimes] = useState(1)
-    const dartsScores = [20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5]
+    const DARTS_SCORES = [20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5]
     const DARTS_DEGREE = 18
 
     useEffect(() => {
         initLocalStrage(STRAGE_KEYS.TURN)
         initLocalStrage(STRAGE_KEYS.USERS)
+        initLocalStrage(STRAGE_KEYS.USER_ID)
         initLocalStrage(STRAGE_KEYS.USER_NAME)
+        initLocalStrage(STRAGE_KEYS.USER_GROUP)
 
         gameScoket.current = new ReconnectingWebSocket(URLS.WEB_SOCKET + SOCKET_KEYS.GAME)
 
@@ -63,7 +67,18 @@ export default function () {
     }
 
     const handleContinue = () => {
-        turn < Number(getLocalStrage(STRAGE_KEYS.TURN)) ? setTurn(turn + 1) : router.replace(URLS.RESULT)
+        // turn < Number(getLocalStrage(STRAGE_KEYS.TURN)) ?
+        //     setTurn(turn + 1)
+        //     :
+        //     router.replace(URLS.RESULT)
+        const gameData: GameData = {
+            groupNum: getLocalStrage(STRAGE_KEYS.USER_GROUP),
+            userName: getLocalStrage(STRAGE_KEYS.USER_NAME),
+            userId: getLocalStrage(STRAGE_KEYS.USER_ID),
+            score: String(score)
+        }
+        const msg = gameSocketMessage(gameData)
+        gameScoket.current?.send(msg)
     }
 
     const handleReset = () => {
@@ -165,9 +180,9 @@ export default function () {
                             {/* ダーツ板のUI */}
                             <div className="relative translate-y-1/4 h-5 w-5">
                                 {Array.from({ length: 20 }).map((_, i) => (
-                                    <DartsButton rotate={i * DARTS_DEGREE} dartsScore={dartsScores[i]} clickEvent={handleScore} key={i}>
+                                    <DartsButton rotate={i * DARTS_DEGREE} dartsScore={DARTS_SCORES[i]} clickEvent={handleScore} key={i}>
                                         <BoldText color={TEXT_COLOR.WHITE} key={i}>
-                                            {dartsScores[i]}
+                                            {DARTS_SCORES[i]}
                                         </BoldText>
                                     </DartsButton>
                                 ))}
@@ -183,7 +198,7 @@ export default function () {
                     </div>
                 </div>
                 {/* 画面操作の無効化 */}
-                <div className="absolute h-screen w-full z-50"/>
+                {/* <div className="absolute h-screen w-full z-50"/> */}
             </div>
         </main>
     )

@@ -1,5 +1,7 @@
 export enum STRAGE_KEYS {
     USER_NAME = "USER_NAME",
+    USER_GROUP = "USER_GROUP",
+    USER_ID = "USER_ID",
     USERS = "USERS",
     ROOM_SELECT = "ROOM_SELECT",
     TEAM_CODE = "TEAM_CODE",
