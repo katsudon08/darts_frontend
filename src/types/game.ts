@@ -1,6 +1,10 @@
-export interface GameData {
+export interface GameInitData {
+    teamcode: string
     groupNum: string
     userName: string
     userId: string
-    score: string
+}
+
+export interface GameData extends GameInitData {
+    score: number
 }

@@ -3,12 +3,12 @@
 import BoldText from "@/components/BoldText"
 import DartsButton from "@/components/DartsButton"
 import { TEXT_COLOR } from "@/types/color"
-import { GameData } from "@/types/game"
+import { GameData, GameInitData } from "@/types/game"
 import { STRAGE_KEYS } from "@/types/localstrage"
 import { URLS } from "@/types/urls"
 import { SOCKET_KEYS } from "@/types/websocket"
 import { getLocalStrage, initLocalStrage } from "@/utils/localstrage"
-import { gameSocketMessage } from "@/utils/sendWebSocketMessage"
+import { gameSocketInitMessage, gameSocketMessage } from "@/utils/sendWebSocketMessage"
 import { useRouter } from "next/navigation"
 import React, { useEffect, useRef, useState } from "react"
 import ReconnectingWebSocket from "reconnecting-websocket"
@@ -25,6 +25,7 @@ export default function () {
     const DARTS_DEGREE = 18
 
     useEffect(() => {
+        initLocalStrage(STRAGE_KEYS.TEAM_CODE)
         initLocalStrage(STRAGE_KEYS.TURN)
         initLocalStrage(STRAGE_KEYS.USERS)
         initLocalStrage(STRAGE_KEYS.USER_ID)
@@ -35,6 +36,14 @@ export default function () {
 
         gameScoket.current.onopen = () => {
             console.log("game open")
+            const gameData: GameInitData = {
+                teamcode: getLocalStrage(STRAGE_KEYS.TEAM_CODE),
+                groupNum: getLocalStrage(STRAGE_KEYS.USER_GROUP),
+                userName: getLocalStrage(STRAGE_KEYS.USER_NAME),
+                userId: getLocalStrage(STRAGE_KEYS.USER_ID),
+            }
+            const msg = gameSocketInitMessage(gameData)
+            gameScoket.current?.send(msg)
         }
 
         gameScoket.current.onclose = () => {
@@ -43,6 +52,8 @@ export default function () {
 
         gameScoket.current.onmessage = (e) => {
             console.log(e.data)
+
+            // 次のユーザーに操作を移す。もし、最後のプレイヤーならリザルト画面へと進む
         }
 
         return () => {
@@ -72,10 +83,11 @@ export default function () {
         //     :
         //     router.replace(URLS.RESULT)
         const gameData: GameData = {
+            teamcode: getLocalStrage(STRAGE_KEYS.TEAM_CODE),
             groupNum: getLocalStrage(STRAGE_KEYS.USER_GROUP),
             userName: getLocalStrage(STRAGE_KEYS.USER_NAME),
             userId: getLocalStrage(STRAGE_KEYS.USER_ID),
-            score: String(score)
+            score: score
         }
         const msg = gameSocketMessage(gameData)
         gameScoket.current?.send(msg)

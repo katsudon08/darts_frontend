@@ -20,6 +20,7 @@ import ReconnectingWebSocket from "reconnecting-websocket"
 export default function () {
     const turnSocket = useRef<ReconnectingWebSocket>()
     const usersSocket = useRef<ReconnectingWebSocket>()
+    const transitionSocket = useRef<ReconnectingWebSocket>()
 
     const router = useRouter()
     const [user, setUser] = useState("")
@@ -47,6 +48,7 @@ export default function () {
         // localstrageの初期化よりも先に走らせる
         turnSocket.current = new ReconnectingWebSocket(URLS.WEB_SOCKET + SOCKET_KEYS.TURN)
         usersSocket.current = new ReconnectingWebSocket(URLS.WEB_SOCKET + SOCKET_KEYS.USERS)
+        transitionSocket.current = new ReconnectingWebSocket(URLS.WEB_SOCKET + SOCKET_KEYS.TRANSITION)
         // userリストの一覧取得
         usersSocket.current?.send("")
 
@@ -69,6 +71,8 @@ export default function () {
 
         usersSocket.current.onopen = () => {
             console.log("users open")
+            usersSocket.current?.send(usersSocketMessage(getLocalStrage(STRAGE_KEYS.TEAM_CODE), 0, getLocalStrage(STRAGE_KEYS.USER_NAME)))
+            setSelectedGroupNumber(0)
             usersSocket.current?.send(getUsersData(getLocalStrage(STRAGE_KEYS.TEAM_CODE)))
         }
 
@@ -92,9 +96,23 @@ export default function () {
             }
         }
 
+        transitionSocket.current.onopen = () => {
+            console.log("transition open")
+        }
+
+        transitionSocket.current.onclose = () => {
+            console.log("transition close")
+        }
+
+        transitionSocket.current.onmessage = () => {
+            console.log("transition")
+            router.replace(URLS.GAME)
+        }
+
         return () => {
             turnSocket.current?.close()
             usersSocket.current?.close()
+            transitionSocket.current?.close()
         }
     }, [])
 
@@ -103,7 +121,7 @@ export default function () {
         setLocalStrage(STRAGE_KEYS.USER_GROUP, String(num))
 
         // usersSocketを送信
-        if (user !== "") usersSocket.current?.send(usersSocketMessage(teamcode, num, user))
+        usersSocket.current?.send(usersSocketMessage(teamcode, num, user))
     }
 
     const handleSelectTurn = (num: number) => {
@@ -115,11 +133,12 @@ export default function () {
         usersSocket.current?.send(deleteUserData(teamcode))
         turnSocket.current?.close()
         usersSocket.current?.close()
+        transitionSocket.current?.close()
         router.replace(URLS.HOME)
     }
 
     const handleContinue = () => {
-        router.replace(URLS.GAME)
+        transitionSocket.current?.send(getLocalStrage(STRAGE_KEYS.TEAM_CODE))
     }
 
     return (
