@@ -8,6 +8,7 @@ import { STRAGE_KEYS } from "@/types/localstrage"
 import { URLS } from "@/types/urls"
 import { SOCKET_KEYS } from "@/types/websocket"
 import { getLocalStrage, initLocalStrage } from "@/utils/localstrage"
+import { gameMessageToSplitLength } from "@/utils/receiveWebSocketMessage"
 import { gameSocketInitMessage, gameSocketMessage } from "@/utils/sendWebSocketMessage"
 import { useRouter } from "next/navigation"
 import React, { useEffect, useRef, useState } from "react"
@@ -21,6 +22,7 @@ export default function () {
     const [score, setScore] = useState(0)
     const [turn, setTurn] = useState(1)
     const [times, setTimes] = useState(1)
+    const [playable, setPlayable] = useState(false)
     const DARTS_SCORES = [20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5]
     const DARTS_DEGREE = 18
 
@@ -51,9 +53,25 @@ export default function () {
         }
 
         gameScoket.current.onmessage = (e) => {
+            console.log(getLocalStrage(STRAGE_KEYS.USER_ID))
             console.log(e.data)
+            const splittedMsg = e.data
+            const len = gameMessageToSplitLength(splittedMsg)
 
-            // 次のユーザーに操作を移す。もし、最後のプレイヤーならリザルト画面へと進む
+            const isMyUserId = (userId: string) => {
+                if (userId === getLocalStrage(STRAGE_KEYS.USER_ID)) {
+                    setPlayable(true)
+                } else {
+                    setPlayable(false)
+                }
+            }
+
+            // TODO: 次のユーザーに操作を移す。もし、最後のプレイヤーならリザルト画面へと進む
+            if (len > 1) {
+                // TODO: 点数加算の処理と操作権移行の処理
+            } else {
+                isMyUserId(splittedMsg[0])
+            }
         }
 
         return () => {
@@ -62,7 +80,7 @@ export default function () {
     }, [])
 
     const handleScore = (e: React.MouseEvent, num: number) => {
-        isActive && setScore(num)
+        isActive && setScore(num*times)
         setIsActive(!isActive)
         e.stopPropagation()
     }
@@ -150,7 +168,7 @@ export default function () {
                                 <div className="flex flex-row justify-end px-2 md:p-4">
                                     <div className="h-full w-fit flex justify-center items-center p-2 rounded-lg bg-white border border-slate-300 shadow-xl">
                                         <BoldText color={TEXT_COLOR.BLACK}>
-                                            {String(score * times) + "点"}
+                                            {String(score) + "点"}
                                         </BoldText>
                                     </div>
                                 </div>
@@ -210,7 +228,7 @@ export default function () {
                     </div>
                 </div>
                 {/* 画面操作の無効化 */}
-                {/* <div className="absolute h-screen w-full z-50"/> */}
+                { playable && <div className="absolute h-screen w-full z-50"/> }
             </div>
         </main>
     )

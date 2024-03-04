@@ -25,7 +25,7 @@ export const deleteUserData = (teamcode: string): string => {
 }
 
 export const gameSocketInitMessage = (gameInitData: GameInitData) => {
-    const result = `${gameInitData.teamcode}${MARK.CONNECTION}${gameInitData.groupNum}${MARK.CONNECTION}${gameInitData.userName}${MARK.CONNECTION}${gameInitData.userId}$`
+    const result = `${gameInitData.teamcode}${MARK.CONNECTION}${gameInitData.groupNum}${MARK.CONNECTION}${gameInitData.userName}${MARK.CONNECTION}${gameInitData.userId}`
     return result
 }
 

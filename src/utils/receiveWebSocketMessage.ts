@@ -25,3 +25,9 @@ export const changeUsersMessageToUsersData = (msg: string): (UserData[] | false)
 
     return usersData
 }
+
+export const gameMessageToSplitLength = (msg: string): number => {
+    const splittedMsg = msg.split(MARK.CONNECTION)
+
+    return splittedMsg.length
+}
