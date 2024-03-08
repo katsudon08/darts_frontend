@@ -7,7 +7,7 @@ import { GameData, GameInitData } from "@/types/game"
 import { STRAGE_KEYS } from "@/types/localstrage"
 import { URLS } from "@/types/urls"
 import { SOCKET_KEYS } from "@/types/websocket"
-import { getLocalStrage, initLocalStrage } from "@/utils/localstrage"
+import { getLocalStrage, initLocalStrage, setLocalStrage } from "@/utils/localstrage"
 import { gameMessageToSplitLength } from "@/utils/receiveWebSocketMessage"
 import { gameSocketInitMessage, gameSocketMessage } from "@/utils/sendWebSocketMessage"
 import { useRouter } from "next/navigation"
@@ -20,7 +20,7 @@ export default function () {
     const router = useRouter()
     const [isActive, setIsActive] = useState(false)
     const [score, setScore] = useState(0)
-    const [turn, setTurn] = useState(1)
+    const [nowTurn, setNowTurn] = useState(1)
     const [times, setTimes] = useState(1)
     const [playable, setPlayable] = useState(false)
     const DARTS_SCORES = [20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5]
@@ -58,8 +58,38 @@ export default function () {
             const splittedMsg = e.data
             const len = gameMessageToSplitLength(splittedMsg)
 
+            const plusMyScore = () => {
+
+            }
+
+            const plusGroupScore = () => {
+
+            }
+
+            const transferPlayableToNextUser = (splittedMsg: string[]) => {
+                const [groupNum, userId, nextUserId, score, isLast] = splittedMsg
+                const myUserId = getLocalStrage(STRAGE_KEYS.USER_ID)
+
+                if (Boolean(isLast) && nowTurn === Number(getLocalStrage(STRAGE_KEYS.TURN))) {
+                    router.replace(URLS.RESULT)
+                } else {
+                    setNowTurn(nowTurn + 1)
+                }
+
+                if (nextUserId === myUserId) {
+                    setPlayable(true)
+                } else if (userId === myUserId) {
+                    setPlayable(false)
+                    plusMyScore()
+                    plusGroupScore()
+                } else {
+                    setPlayable(false)
+                }
+            }
+
             const isMyUserId = (userId: string) => {
-                if (userId === getLocalStrage(STRAGE_KEYS.USER_ID)) {
+                const myUserId = getLocalStrage(STRAGE_KEYS.USER_ID)
+                if (userId === myUserId) {
                     setPlayable(true)
                 } else {
                     setPlayable(false)
@@ -69,6 +99,7 @@ export default function () {
             // TODO: 次のユーザーに操作を移す。もし、最後のプレイヤーならリザルト画面へと進む
             if (len > 1) {
                 // TODO: 点数加算の処理と操作権移行の処理
+                transferPlayableToNextUser(splittedMsg)
             } else {
                 isMyUserId(splittedMsg[0])
             }
@@ -126,7 +157,7 @@ export default function () {
                                 <div className="w-fit flex justify-center items-center p-2 border border-slate-300 bg-white rounded-md shadow-lg">
                                     <div className=" scale-125 mr-1">
                                         <BoldText color={TEXT_COLOR.BLACK}>
-                                            {String(turn)}
+                                            {String(nowTurn)}
                                         </BoldText>
                                     </div>
                                     <div className="font-semibold select-none pt-3">ターン</div>
