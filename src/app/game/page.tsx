@@ -58,12 +58,28 @@ export default function () {
             const splittedMsg = e.data
             const len = gameMessageToSplitLength(splittedMsg)
 
-            const plusMyScore = () => {
-
+            const plusScore = (key: STRAGE_KEYS, score: number) => {
+                const strageScore = Number(getLocalStrage(key))
+                const newScore = strageScore + score
+                setLocalStrage(key, String(newScore))
             }
 
-            const plusGroupScore = () => {
+            const plusMyScore = (score: string) => {
+                plusScore(STRAGE_KEYS.MY_SCORE, Number(score))
+            }
 
+            const plusGroupScore = (groupNum: string, score: string) => {
+                switch (groupNum) {
+                    case "0":
+                        plusScore(STRAGE_KEYS.RED_GROUP_SCORE, Number(score))
+                        break
+                    case "1":
+                        plusScore(STRAGE_KEYS.BLUE_GROUP_SCORE, Number(score))
+                        break
+                    case "2":
+                        plusScore(STRAGE_KEYS.GREEN_GROUP_SCORE, Number(score))
+                        break
+                }
             }
 
             const transferPlayableToNextUser = (splittedMsg: string[]) => {
@@ -80,8 +96,8 @@ export default function () {
                     setPlayable(true)
                 } else if (userId === myUserId) {
                     setPlayable(false)
-                    plusMyScore()
-                    plusGroupScore()
+                    plusMyScore(score)
+                    plusGroupScore(groupNum, score)
                 } else {
                     setPlayable(false)
                 }
@@ -111,7 +127,7 @@ export default function () {
     }, [])
 
     const handleScore = (e: React.MouseEvent, num: number) => {
-        isActive && setScore(num*times)
+        isActive && setScore(num * times)
         setIsActive(!isActive)
         e.stopPropagation()
     }
@@ -259,7 +275,7 @@ export default function () {
                     </div>
                 </div>
                 {/* 画面操作の無効化 */}
-                { playable && <div className="absolute h-screen w-full z-50"/> }
+                {playable && <div className="absolute h-screen w-full z-50" />}
             </div>
         </main>
     )
