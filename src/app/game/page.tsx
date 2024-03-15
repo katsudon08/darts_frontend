@@ -16,6 +16,7 @@ import ReconnectingWebSocket from "reconnecting-websocket"
 
 export default function () {
     const gameScoket = useRef<ReconnectingWebSocket>()
+    const gameDisplaySocket = useRef<ReconnectingWebSocket>()
 
     const router = useRouter()
     const [isActive, setIsActive] = useState(false)
@@ -35,6 +36,7 @@ export default function () {
         initLocalStrage(STRAGE_KEYS.USER_GROUP)
 
         gameScoket.current = new ReconnectingWebSocket(URLS.WEB_SOCKET + SOCKET_KEYS.GAME)
+        gameDisplaySocket.current = new ReconnectingWebSocket(URLS.WEB_SOCKET + SOCKET_KEYS.GAME_DISPLAY)
 
         gameScoket.current.onopen = () => {
             console.log("game open")
@@ -121,12 +123,23 @@ export default function () {
             }
         }
 
+        gameDisplaySocket.current.onopen = () => {
+            console.log("game-display open")
+        }
+        gameDisplaySocket.current.onclose = () => {
+            console.log("game-display close")
+        }
+        gameDisplaySocket.current.onmessage = (e) => {
+            console.log(e.data)
+        }
+
         return () => {
             gameScoket.current?.close()
         }
     }, [])
 
     const handleScore = (e: React.MouseEvent, num: number) => {
+        // TODO: 誰が何点上欄を押しているのかわかるようにwebsocketに変更する
         isActive && setScore(num * times)
         setIsActive(!isActive)
         e.stopPropagation()
@@ -143,10 +156,6 @@ export default function () {
     }
 
     const handleContinue = () => {
-        // turn < Number(getLocalStrage(STRAGE_KEYS.TURN)) ?
-        //     setTurn(turn + 1)
-        //     :
-        //     router.replace(URLS.RESULT)
         const gameData: GameData = {
             teamcode: getLocalStrage(STRAGE_KEYS.TEAM_CODE),
             groupNum: getLocalStrage(STRAGE_KEYS.USER_GROUP),

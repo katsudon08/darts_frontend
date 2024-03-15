@@ -30,6 +30,7 @@ export default function () {
     const [roomFlag, setRoomFlag] = useState(false)
     const [teamcode, setTeamcode] = useState("")
     const [isPopUpWindow, setIsPopUpWindow] = useState(false)
+    const [isTransitioning, setIsTransitioning] = useState(false)
 
     const groups = ["redButton", "blueButton", "greenButton"]
     const selectedGroups = ["selectedRedButton", "selectedBlueButton", "selectedGreenButton"]
@@ -106,7 +107,7 @@ export default function () {
 
         transitionSocket.current.onmessage = () => {
             console.log("transition")
-            router.replace(URLS.GAME)
+            setIsTransitioning(true)
         }
 
         return () => {
@@ -115,6 +116,12 @@ export default function () {
             transitionSocket.current?.close()
         }
     }, [])
+
+    useEffect(() => {
+        if (isTransitioning) {
+            router.replace(URLS.GAME)
+        }
+    }, [isTransitioning])
 
     const handleSelectGroup = (num: number) => {
         setSelectedGroupNumber(num)
@@ -153,7 +160,7 @@ export default function () {
                     <div className="flex justify-center h-full w-3/4 md:w-4/5">
                         <div className="flex flex-col justify-between space-y-1 h-full w-5/6">
                             {Array.from({ length: 6 }).map((_, i) => (
-                                <User user={users[i]} key={i}/>
+                                <User user={users[i]} key={i} />
                             ))}
                         </div>
                     </div>
