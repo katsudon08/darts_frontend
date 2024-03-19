@@ -115,6 +115,10 @@ export default function () {
             }
 
             // TODO: 次のユーザーに操作を移す。もし、最後のプレイヤーならリザルト画面へと進む
+
+            console.log("nowturn", nowTurn)
+            console.log("limitedturn", getLocalStrage(STRAGE_KEYS.TURN))
+
             if (len > 1) {
                 // TODO: 点数加算の処理と操作権移行の処理
                 transferPlayableToNextUser(splittedMsg)
