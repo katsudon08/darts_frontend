@@ -107,7 +107,7 @@ export default function () {
 
         transitionSocket.current.onmessage = () => {
             console.log("transition")
-            setIsTransitioning(true)
+            router.replace(URLS.GAME)
         }
 
         return () => {
@@ -116,12 +116,6 @@ export default function () {
             transitionSocket.current?.close()
         }
     }, [])
-
-    useEffect(() => {
-        if (isTransitioning) {
-            router.replace(URLS.GAME)
-        }
-    }, [isTransitioning])
 
     const handleSelectGroup = (num: number) => {
         setSelectedGroupNumber(num)

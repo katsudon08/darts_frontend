@@ -5,6 +5,7 @@ import DartsButton from "@/components/DartsButton"
 import { TEXT_COLOR } from "@/types/color"
 import { GameData, GameInitData } from "@/types/game"
 import { STRAGE_KEYS } from "@/types/localstrage"
+import { MARK } from "@/types/message"
 import { URLS } from "@/types/urls"
 import { SOCKET_KEYS } from "@/types/websocket"
 import { getLocalStrage, initLocalStrage, setLocalStrage } from "@/utils/localstrage"
@@ -27,6 +28,13 @@ export default function () {
     const DARTS_SCORES = [20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5]
     const DARTS_DEGREE = 18
 
+    const resetStrageScore = () => {
+        setLocalStrage(STRAGE_KEYS.MY_SCORE, "0")
+        setLocalStrage(STRAGE_KEYS.RED_GROUP_SCORE, "0")
+        setLocalStrage(STRAGE_KEYS.BLUE_GROUP_SCORE, "0")
+        setLocalStrage(STRAGE_KEYS.GREEN_GROUP_SCORE, "0")
+    }
+
     useEffect(() => {
         initLocalStrage(STRAGE_KEYS.TEAM_CODE)
         initLocalStrage(STRAGE_KEYS.TURN)
@@ -34,6 +42,12 @@ export default function () {
         initLocalStrage(STRAGE_KEYS.USER_ID)
         initLocalStrage(STRAGE_KEYS.USER_NAME)
         initLocalStrage(STRAGE_KEYS.USER_GROUP)
+        initLocalStrage(STRAGE_KEYS.MY_SCORE)
+        initLocalStrage(STRAGE_KEYS.RED_GROUP_SCORE)
+        initLocalStrage(STRAGE_KEYS.BLUE_GROUP_SCORE)
+        initLocalStrage(STRAGE_KEYS.GREEN_GROUP_SCORE)
+        setLocalStrage(STRAGE_KEYS.TURN, "1")
+        resetStrageScore()
 
         gameScoket.current = new ReconnectingWebSocket(URLS.WEB_SOCKET + SOCKET_KEYS.GAME)
         gameDisplaySocket.current = new ReconnectingWebSocket(URLS.WEB_SOCKET + SOCKET_KEYS.GAME_DISPLAY)
@@ -57,8 +71,8 @@ export default function () {
         gameScoket.current.onmessage = (e) => {
             console.log(getLocalStrage(STRAGE_KEYS.USER_ID))
             console.log(e.data)
-            const splittedMsg = e.data
-            const len = gameMessageToSplitLength(splittedMsg)
+            const msg = e.data
+            const len = gameMessageToSplitLength(msg)
 
             const plusScore = (key: STRAGE_KEYS, score: number) => {
                 const strageScore = Number(getLocalStrage(key))
@@ -84,24 +98,34 @@ export default function () {
                 }
             }
 
-            const transferPlayableToNextUser = (splittedMsg: string[]) => {
-                const [groupNum, userId, nextUserId, score, isLast] = splittedMsg
+            const transferPlayableToNextUser = (msg: string) => {
+                const [groupNum, userId, nextUserId, score, isLast] = msg.split(MARK.CONNECTION)
                 const myUserId = getLocalStrage(STRAGE_KEYS.USER_ID)
 
-                if (Boolean(isLast) && nowTurn === Number(getLocalStrage(STRAGE_KEYS.TURN))) {
-                    router.replace(URLS.RESULT)
-                } else {
-                    setNowTurn(nowTurn + 1)
-                }
+                console.log(groupNum)
+                console.log(userId)
+                console.log(nextUserId)
+                console.log(score)
+                console.log(isLast)
+                console.log(myUserId===userId)
 
-                if (nextUserId === myUserId) {
-                    setPlayable(true)
-                } else if (userId === myUserId) {
+                if (myUserId === userId) {
+                    console.log("debag 1")
                     setPlayable(false)
                     plusMyScore(score)
                     plusGroupScore(groupNum, score)
-                } else {
+                } else if (myUserId === nextUserId) {
+                    console.log("debag 2")
                     setPlayable(false)
+                } else {
+                    console.log("debag 3")
+                    setPlayable(false)
+                }
+
+                if (Boolean(isLast) && nowTurn >= Number(getLocalStrage(STRAGE_KEYS.TURN))) {
+                    router.replace(URLS.RESULT)
+                } else {
+                    setNowTurn(nowTurn + 1)
                 }
             }
 
@@ -121,9 +145,9 @@ export default function () {
 
             if (len > 1) {
                 // TODO: 点数加算の処理と操作権移行の処理
-                transferPlayableToNextUser(splittedMsg)
+                transferPlayableToNextUser(msg)
             } else {
-                isMyUserId(splittedMsg[0])
+                isMyUserId(msg[0])
             }
         }
 
