@@ -139,6 +139,7 @@ export default function () {
     }
 
     const handleContinue = () => {
+        usersSocket.current?.send(deleteUserData(teamcode))
         transitionSocket.current?.send(getLocalStrage(STRAGE_KEYS.TEAM_CODE))
     }
 
