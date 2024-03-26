@@ -30,10 +30,13 @@ export default function () {
     const [roomFlag, setRoomFlag] = useState(false)
     const [teamcode, setTeamcode] = useState("")
     const [isPopUpWindow, setIsPopUpWindow] = useState(false)
-    const [isTransitioning, setIsTransitioning] = useState(false)
 
     const groups = ["redButton", "blueButton", "greenButton"]
     const selectedGroups = ["selectedRedButton", "selectedBlueButton", "selectedGreenButton"]
+
+    const handleDeleteUser = () => {
+        usersSocket.current?.send(deleteUserData(getLocalStrage(STRAGE_KEYS.TEAM_CODE)))
+    }
 
     useEffect(() => {
         initLocalStrage(STRAGE_KEYS.ROOM_SELECT)
@@ -72,8 +75,8 @@ export default function () {
 
         usersSocket.current.onopen = () => {
             console.log("users open")
-            usersSocket.current?.send(usersSocketMessage(getLocalStrage(STRAGE_KEYS.TEAM_CODE), 0, getLocalStrage(STRAGE_KEYS.USER_NAME)))
-            setSelectedGroupNumber(0)
+            setSelectedGroupNumber(Number(getLocalStrage(STRAGE_KEYS.USER_GROUP)))
+            usersSocket.current?.send(usersSocketMessage(getLocalStrage(STRAGE_KEYS.TEAM_CODE), Number(getLocalStrage(STRAGE_KEYS.USER_GROUP)), getLocalStrage(STRAGE_KEYS.USER_NAME)))
             usersSocket.current?.send(getUsersData(getLocalStrage(STRAGE_KEYS.TEAM_CODE)))
         }
 
@@ -116,6 +119,14 @@ export default function () {
             transitionSocket.current?.close()
         }
     }, [])
+
+    useEffect(() => {
+        window.addEventListener("beforeunload", handleDeleteUser)
+
+        return () => {
+            window.removeEventListener("beforeunload", handleDeleteUser)
+        }
+    }, [handleDeleteUser])
 
     const handleSelectGroup = (num: number) => {
         setSelectedGroupNumber(num)
