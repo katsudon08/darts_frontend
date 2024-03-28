@@ -8,3 +8,10 @@ export interface GameInitData {
 export interface GameData extends GameInitData {
     score: number
 }
+
+export interface GameDisplayData {
+    teamcode: string,
+    groupNum: string,
+    userName: string,
+    score: number
+}

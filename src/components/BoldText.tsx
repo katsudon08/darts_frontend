@@ -14,12 +14,27 @@ const BoldText = ({ color, children }: { color: TEXT_COLOR, children: React.Reac
                     {children}
                 </h1>
             )
+        case TEXT_COLOR.RED:
+            return (
+                <h1 className="select-none text-3xl font-semibold text-red-600">
+                    {children}
+                </h1>
+            )
         case TEXT_COLOR.BLUE:
             return (
                 <h1 className="select-none text-3xl font-semibold text-blue-600">
                     {children}
                 </h1>
-            );
+            )
+        case TEXT_COLOR.GREEN:
+            return (
+                <h1 className="select-none text-3xl font-semibold text-green-600">
+                    {children}
+                </h1>
+            )
+
+
+
     }
 }
 

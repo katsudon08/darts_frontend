@@ -4,13 +4,13 @@ import BoldText from "@/components/BoldText"
 import PopUp from "@/components/PopUp"
 import User from "@/components/User"
 import { TEXT_COLOR } from "@/types/color"
-import { STRAGE_KEYS } from "@/types/localstrage"
+import { STORAGE_KEYS } from "@/types/localstorage"
 import { ROOM_SELECT } from "@/types/room-select"
 import { URLS } from "@/types/urls"
 import { UserData } from "@/types/user"
 import { SOCKET_KEYS } from "@/types/websocket"
 import { createMessageFromUsers } from "@/utils/createMessageFromUsers"
-import { getLocalStrage, initLocalStrage, setLocalStrage } from "@/utils/localstrage"
+import { getLocalStorage, initLocalStorage, setLocalStorage } from "@/utils/localstorage"
 import { changeUsersMessageToUsersData } from "@/utils/receiveWebSocketMessage"
 import { deleteUserData, getTurnData, getUsersData, turnSocketMessage, usersSocketMessage } from "@/utils/sendWebSocketMessage"
 import { useRouter } from "next/navigation"
@@ -35,19 +35,20 @@ export default function () {
     const selectedGroups = ["selectedRedButton", "selectedBlueButton", "selectedGreenButton"]
 
     const handleDeleteUser = () => {
-        usersSocket.current?.send(deleteUserData(getLocalStrage(STRAGE_KEYS.TEAM_CODE)))
+        usersSocket.current?.send(deleteUserData(getLocalStorage(STORAGE_KEYS.TEAM_CODE)))
     }
 
     useEffect(() => {
-        initLocalStrage(STRAGE_KEYS.ROOM_SELECT)
-        initLocalStrage(STRAGE_KEYS.TURN)
-        initLocalStrage(STRAGE_KEYS.USER_NAME)
-        initLocalStrage(STRAGE_KEYS.USER_GROUP)
-        initLocalStrage(STRAGE_KEYS.USERS)
+        initLocalStorage(STORAGE_KEYS.ROOM_SELECT)
+        initLocalStorage(STORAGE_KEYS.TURN)
+        initLocalStorage(STORAGE_KEYS.USER_NAME)
+        initLocalStorage(STORAGE_KEYS.USER_GROUP)
+        initLocalStorage(STORAGE_KEYS.USERS)
 
-        setRoomFlag(getLocalStrage(STRAGE_KEYS.ROOM_SELECT) === ROOM_SELECT.HOLD)
-        setTeamcode(getLocalStrage(STRAGE_KEYS.TEAM_CODE))
-        setUser(getLocalStrage(STRAGE_KEYS.USER_NAME))
+        setLocalStorage(STORAGE_KEYS.TURN, "1")
+        setRoomFlag(getLocalStorage(STORAGE_KEYS.ROOM_SELECT) === ROOM_SELECT.HOLD)
+        setTeamcode(getLocalStorage(STORAGE_KEYS.TEAM_CODE))
+        setUser(getLocalStorage(STORAGE_KEYS.USER_NAME))
 
         // localstrageの初期化よりも先に走らせる
         turnSocket.current = new ReconnectingWebSocket(URLS.WEB_SOCKET + SOCKET_KEYS.TURN)
@@ -58,7 +59,7 @@ export default function () {
 
         turnSocket.current.onopen = () => {
             console.log("turn open")
-            turnSocket.current?.send(getTurnData(getLocalStrage(STRAGE_KEYS.TEAM_CODE)))
+            turnSocket.current?.send(getTurnData(getLocalStorage(STORAGE_KEYS.TEAM_CODE)))
         }
 
         turnSocket.current.onclose = () => {
@@ -70,14 +71,14 @@ export default function () {
 
             const tmp = (e.data === "") ? "1" : e.data
             setSelectedTurn(Number(tmp))
-            setLocalStrage(STRAGE_KEYS.TURN, e.data)
+            setLocalStorage(STORAGE_KEYS.TURN, e.data)
         }
 
         usersSocket.current.onopen = () => {
             console.log("users open")
-            setSelectedGroupNumber(Number(getLocalStrage(STRAGE_KEYS.USER_GROUP)))
-            usersSocket.current?.send(usersSocketMessage(getLocalStrage(STRAGE_KEYS.TEAM_CODE), Number(getLocalStrage(STRAGE_KEYS.USER_GROUP)), getLocalStrage(STRAGE_KEYS.USER_NAME)))
-            usersSocket.current?.send(getUsersData(getLocalStrage(STRAGE_KEYS.TEAM_CODE)))
+            setSelectedGroupNumber(Number(getLocalStorage(STORAGE_KEYS.USER_GROUP)))
+            usersSocket.current?.send(usersSocketMessage(getLocalStorage(STORAGE_KEYS.TEAM_CODE), Number(getLocalStorage(STORAGE_KEYS.USER_GROUP)), getLocalStorage(STORAGE_KEYS.USER_NAME)))
+            usersSocket.current?.send(getUsersData(getLocalStorage(STORAGE_KEYS.TEAM_CODE)))
         }
 
         usersSocket.current.onclose = () => {
@@ -94,7 +95,7 @@ export default function () {
 
             if (usersData) {
                 setUsers(usersData)
-                setLocalStrage(STRAGE_KEYS.USERS, createMessageFromUsers(usersData))
+                setLocalStorage(STORAGE_KEYS.USERS, createMessageFromUsers(usersData))
             } else {
                 setIsPopUpWindow(true)
             }
@@ -130,7 +131,7 @@ export default function () {
 
     const handleSelectGroup = (num: number) => {
         setSelectedGroupNumber(num)
-        setLocalStrage(STRAGE_KEYS.USER_GROUP, String(num))
+        setLocalStorage(STORAGE_KEYS.USER_GROUP, String(num))
 
         // usersSocketを送信
         usersSocket.current?.send(usersSocketMessage(teamcode, num, user))
@@ -151,7 +152,7 @@ export default function () {
 
     const handleContinue = () => {
         usersSocket.current?.send(deleteUserData(teamcode))
-        transitionSocket.current?.send(getLocalStrage(STRAGE_KEYS.TEAM_CODE))
+        transitionSocket.current?.send(getLocalStorage(STORAGE_KEYS.TEAM_CODE))
     }
 
     return (

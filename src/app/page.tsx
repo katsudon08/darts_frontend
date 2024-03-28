@@ -3,11 +3,11 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import {
-    getLocalStrage,
-    initLocalStrage,
-    setLocalStrage
-} from "@/utils/localstrage"
-import { STRAGE_KEYS } from "@/types/localstrage"
+    getLocalStorage,
+    initLocalStorage,
+    setLocalStorage
+} from "@/utils/localstorage"
+import { STORAGE_KEYS } from "@/types/localstorage"
 import { URLS } from "@/types/urls"
 import BoldText from "@/components/BoldText"
 import { TEXT_COLOR } from "@/types/color"
@@ -17,12 +17,12 @@ export default function Home() {
     const [text, setText] = useState("")
 
     useEffect(() => {
-        initLocalStrage(STRAGE_KEYS.USER_NAME)
-        setText(getLocalStrage(STRAGE_KEYS.USER_NAME))
+        initLocalStorage(STORAGE_KEYS.USER_NAME)
+        setText(getLocalStorage(STORAGE_KEYS.USER_NAME))
     }, [])
 
     const handleClick = () => {
-        setLocalStrage(STRAGE_KEYS.USER_NAME, text)
+        setLocalStorage(STORAGE_KEYS.USER_NAME, text)
         router.push(URLS.ROOM_SELECT)
     }
 

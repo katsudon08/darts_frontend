@@ -3,14 +3,14 @@
 import BoldText from "@/components/BoldText"
 import DartsButton from "@/components/DartsButton"
 import { TEXT_COLOR } from "@/types/color"
-import { GameData, GameInitData } from "@/types/game"
-import { STRAGE_KEYS } from "@/types/localstrage"
+import { GameData, GameDisplayData, GameInitData } from "@/types/game"
+import { STORAGE_KEYS } from "@/types/localstorage"
 import { MARK } from "@/types/message"
 import { URLS } from "@/types/urls"
 import { SOCKET_KEYS } from "@/types/websocket"
-import { getLocalStrage, initLocalStrage, setLocalStrage } from "@/utils/localstrage"
+import { getLocalStorage, initLocalStorage, setLocalStorage } from "@/utils/localstorage"
 import { gameMessageToSplitLength } from "@/utils/receiveWebSocketMessage"
-import { gameSocketInitMessage, gameSocketMessage } from "@/utils/sendWebSocketMessage"
+import { gameDisplaySocketMessage, gameSocketInitMessage, gameSocketMessage } from "@/utils/sendWebSocketMessage"
 import { useRouter } from "next/navigation"
 import React, { useEffect, useRef, useState } from "react"
 import ReconnectingWebSocket from "reconnecting-websocket"
@@ -24,29 +24,43 @@ export default function () {
     const [score, setScore] = useState(0)
     const [nowTurn, setNowTurn] = useState(1)
     const [times, setTimes] = useState(1)
-    const [playable, setPlayable] = useState(false)
+    const [playable, setPlayable] = useState(true)
+    const [displayUserName, setDisplayUserName] = useState("")
+    const [textColor, setTextColor] = useState<TEXT_COLOR>(TEXT_COLOR.BLACK)
     const DARTS_SCORES = [20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5]
     const DARTS_DEGREE = 18
 
     const resetStrageScore = () => {
-        setLocalStrage(STRAGE_KEYS.MY_SCORE, "0")
-        setLocalStrage(STRAGE_KEYS.RED_GROUP_SCORE, "0")
-        setLocalStrage(STRAGE_KEYS.BLUE_GROUP_SCORE, "0")
-        setLocalStrage(STRAGE_KEYS.GREEN_GROUP_SCORE, "0")
+        setLocalStorage(STORAGE_KEYS.MY_SCORE, "0")
+        setLocalStorage(STORAGE_KEYS.RED_GROUP_SCORE, "0")
+        setLocalStorage(STORAGE_KEYS.BLUE_GROUP_SCORE, "0")
+        setLocalStorage(STORAGE_KEYS.GREEN_GROUP_SCORE, "0")
+    }
+
+    const selectColor = (groupNum: string): TEXT_COLOR => {
+        switch (groupNum) {
+            case "0":
+                return TEXT_COLOR.RED
+            case "1":
+                return TEXT_COLOR.BLUE
+            case "2":
+                return TEXT_COLOR.GREEN
+            default:
+                return TEXT_COLOR.BLACK
+        }
     }
 
     useEffect(() => {
-        initLocalStrage(STRAGE_KEYS.TEAM_CODE)
-        initLocalStrage(STRAGE_KEYS.TURN)
-        initLocalStrage(STRAGE_KEYS.USERS)
-        initLocalStrage(STRAGE_KEYS.USER_ID)
-        initLocalStrage(STRAGE_KEYS.USER_NAME)
-        initLocalStrage(STRAGE_KEYS.USER_GROUP)
-        initLocalStrage(STRAGE_KEYS.MY_SCORE)
-        initLocalStrage(STRAGE_KEYS.RED_GROUP_SCORE)
-        initLocalStrage(STRAGE_KEYS.BLUE_GROUP_SCORE)
-        initLocalStrage(STRAGE_KEYS.GREEN_GROUP_SCORE)
-        setLocalStrage(STRAGE_KEYS.TURN, "1")
+        initLocalStorage(STORAGE_KEYS.TEAM_CODE)
+        initLocalStorage(STORAGE_KEYS.TURN)
+        initLocalStorage(STORAGE_KEYS.USERS)
+        initLocalStorage(STORAGE_KEYS.USER_ID)
+        initLocalStorage(STORAGE_KEYS.USER_NAME)
+        initLocalStorage(STORAGE_KEYS.USER_GROUP)
+        initLocalStorage(STORAGE_KEYS.MY_SCORE)
+        initLocalStorage(STORAGE_KEYS.RED_GROUP_SCORE)
+        initLocalStorage(STORAGE_KEYS.BLUE_GROUP_SCORE)
+        initLocalStorage(STORAGE_KEYS.GREEN_GROUP_SCORE)
         resetStrageScore()
 
         gameScoket.current = new ReconnectingWebSocket(URLS.WEB_SOCKET + SOCKET_KEYS.GAME)
@@ -55,10 +69,10 @@ export default function () {
         gameScoket.current.onopen = () => {
             console.log("game open")
             const gameData: GameInitData = {
-                teamcode: getLocalStrage(STRAGE_KEYS.TEAM_CODE),
-                groupNum: getLocalStrage(STRAGE_KEYS.USER_GROUP),
-                userName: getLocalStrage(STRAGE_KEYS.USER_NAME),
-                userId: getLocalStrage(STRAGE_KEYS.USER_ID),
+                teamcode: getLocalStorage(STORAGE_KEYS.TEAM_CODE),
+                groupNum: getLocalStorage(STORAGE_KEYS.USER_GROUP),
+                userName: getLocalStorage(STORAGE_KEYS.USER_NAME),
+                userId: getLocalStorage(STORAGE_KEYS.USER_ID),
             }
             const msg = gameSocketInitMessage(gameData)
             gameScoket.current?.send(msg)
@@ -69,71 +83,84 @@ export default function () {
         }
 
         gameScoket.current.onmessage = (e) => {
-            console.log(getLocalStrage(STRAGE_KEYS.USER_ID))
+            console.log(getLocalStorage(STORAGE_KEYS.USER_ID))
             console.log(e.data)
             const msg = e.data
             const len = gameMessageToSplitLength(msg)
 
-            const plusScore = (key: STRAGE_KEYS, score: number) => {
-                const strageScore = Number(getLocalStrage(key))
+            const plusScore = (key: STORAGE_KEYS, score: number) => {
+                const strageScore = Number(getLocalStorage(key))
                 const newScore = strageScore + score
-                setLocalStrage(key, String(newScore))
+                setLocalStorage(key, String(newScore))
             }
 
             const plusMyScore = (score: string) => {
-                plusScore(STRAGE_KEYS.MY_SCORE, Number(score))
+                plusScore(STORAGE_KEYS.MY_SCORE, Number(score))
             }
 
             const plusGroupScore = (groupNum: string, score: string) => {
                 switch (groupNum) {
                     case "0":
-                        plusScore(STRAGE_KEYS.RED_GROUP_SCORE, Number(score))
+                        plusScore(STORAGE_KEYS.RED_GROUP_SCORE, Number(score))
                         break
                     case "1":
-                        plusScore(STRAGE_KEYS.BLUE_GROUP_SCORE, Number(score))
+                        plusScore(STORAGE_KEYS.BLUE_GROUP_SCORE, Number(score))
                         break
                     case "2":
-                        plusScore(STRAGE_KEYS.GREEN_GROUP_SCORE, Number(score))
+                        plusScore(STORAGE_KEYS.GREEN_GROUP_SCORE, Number(score))
                         break
                 }
             }
 
             const transferPlayableToNextUser = (msg: string) => {
                 const [groupNum, userId, nextUserId, score, isLast] = msg.split(MARK.CONNECTION)
-                const myUserId = getLocalStrage(STRAGE_KEYS.USER_ID)
+                const myUserId = getLocalStorage(STORAGE_KEYS.USER_ID)
 
                 console.log(groupNum)
                 console.log(userId)
                 console.log(nextUserId)
                 console.log(score)
                 console.log(isLast)
-                console.log(myUserId===userId)
+                console.log(myUserId === userId)
 
-                if (myUserId === userId) {
+                if (myUserId === nextUserId) {
                     console.log("debag 1")
+                    setPlayable(true)
+                    const gameDisplayData: GameDisplayData = {
+                        teamcode: getLocalStorage(STORAGE_KEYS.TEAM_CODE),
+                        groupNum: getLocalStorage(STORAGE_KEYS.USER_GROUP),
+                        userName: getLocalStorage(STORAGE_KEYS.USER_NAME),
+                        score: 0
+                    }
+                    gameDisplaySocket.current?.send(gameDisplaySocketMessage(gameDisplayData))
+                } else if (myUserId === userId) {
+                    console.log("debag 2")
                     setPlayable(false)
                     plusMyScore(score)
                     plusGroupScore(groupNum, score)
-                } else if (myUserId === nextUserId) {
-                    console.log("debag 2")
-                    setPlayable(false)
                 } else {
                     console.log("debag 3")
                     setPlayable(false)
                 }
 
-                if (Boolean(isLast) && nowTurn >= Number(getLocalStrage(STRAGE_KEYS.TURN))) {
-                    router.replace(URLS.RESULT)
-                } else {
-                    setNowTurn(nowTurn + 1)
-                }
+                console.log("nowturn:", nowTurn, "turn:", getLocalStorage(STORAGE_KEYS.TURN))
+
+                setNowTurn((prevTurn) => {
+                    if (Boolean(isLast) && prevTurn + 1 > Number(getLocalStorage(STORAGE_KEYS.TURN))) {
+                        router.replace(URLS.RESULT);
+                        return prevTurn;
+                    }
+                    return prevTurn + 1;
+                })
             }
 
             const isMyUserId = (userId: string) => {
-                const myUserId = getLocalStrage(STRAGE_KEYS.USER_ID)
+                const myUserId = getLocalStorage(STORAGE_KEYS.USER_ID)
                 if (userId === myUserId) {
+                    console.log("playable")
                     setPlayable(true)
                 } else {
+                    console.log("not playable")
                     setPlayable(false)
                 }
             }
@@ -141,40 +168,67 @@ export default function () {
             // TODO: 次のユーザーに操作を移す。もし、最後のプレイヤーならリザルト画面へと進む
 
             console.log("nowturn", nowTurn)
-            console.log("limitedturn", getLocalStrage(STRAGE_KEYS.TURN))
+            console.log("limitedturn", getLocalStorage(STORAGE_KEYS.TURN))
 
             if (len > 1) {
                 // TODO: 点数加算の処理と操作権移行の処理
                 transferPlayableToNextUser(msg)
             } else {
-                isMyUserId(msg[0])
+                console.log("msg:", msg)
+                isMyUserId(msg)
             }
         }
 
         gameDisplaySocket.current.onopen = () => {
             console.log("game-display open")
+            // groupNum userName score
+            const gameDisplayData: GameDisplayData = {
+                teamcode: getLocalStorage(STORAGE_KEYS.TEAM_CODE),
+                groupNum: getLocalStorage(STORAGE_KEYS.USER_GROUP),
+                userName: getLocalStorage(STORAGE_KEYS.USER_NAME),
+                score: 0
+            }
+            gameDisplaySocket.current?.send(gameDisplaySocketMessage(gameDisplayData))
         }
         gameDisplaySocket.current.onclose = () => {
             console.log("game-display close")
         }
         gameDisplaySocket.current.onmessage = (e) => {
-            console.log(e.data)
+            console.log("display", e.data)
+            const [_, groupNum, userName, userScore] = (e.data).split(MARK.CONNECTION)
+            setTextColor(selectColor(groupNum))
+            setDisplayUserName(userName)
+            setScore(userScore)
         }
 
         return () => {
             gameScoket.current?.close()
+            gameDisplaySocket.current?.close()
         }
     }, [])
 
     const handleScore = (e: React.MouseEvent, num: number) => {
         // TODO: 誰が何点上欄を押しているのかわかるようにwebsocketに変更する
-        isActive && setScore(num * times)
+        const gameDisplayData: GameDisplayData = {
+            teamcode: getLocalStorage(STORAGE_KEYS.TEAM_CODE),
+            groupNum: getLocalStorage(STORAGE_KEYS.USER_GROUP),
+            userName: getLocalStorage(STORAGE_KEYS.USER_NAME),
+            score: num * times
+        }
+        isActive && gameDisplaySocket.current?.send(gameDisplaySocketMessage(gameDisplayData))
         setIsActive(!isActive)
         e.stopPropagation()
     }
 
     const handleTimes = (num: number) => {
         setTimes(num)
+        const gameDisplayData: GameDisplayData = {
+            teamcode: getLocalStorage(STORAGE_KEYS.TEAM_CODE),
+            groupNum: getLocalStorage(STORAGE_KEYS.USER_GROUP),
+            userName: getLocalStorage(STORAGE_KEYS.USER_NAME),
+            score: num * score
+        }
+        gameDisplaySocket.current?.send(gameDisplaySocketMessage(gameDisplayData))
     }
 
     const handleDarts = (e: React.MouseEvent) => {
@@ -184,11 +238,12 @@ export default function () {
     }
 
     const handleContinue = () => {
+        setTimes(1)
         const gameData: GameData = {
-            teamcode: getLocalStrage(STRAGE_KEYS.TEAM_CODE),
-            groupNum: getLocalStrage(STRAGE_KEYS.USER_GROUP),
-            userName: getLocalStrage(STRAGE_KEYS.USER_NAME),
-            userId: getLocalStrage(STRAGE_KEYS.USER_ID),
+            teamcode: getLocalStorage(STORAGE_KEYS.TEAM_CODE),
+            groupNum: getLocalStorage(STORAGE_KEYS.USER_GROUP),
+            userName: getLocalStorage(STORAGE_KEYS.USER_NAME),
+            userId: getLocalStorage(STORAGE_KEYS.USER_ID),
             score: score
         }
         const msg = gameSocketMessage(gameData)
@@ -197,6 +252,7 @@ export default function () {
 
     const handleReset = () => {
         setScore(0)
+        setTimes(1)
         setIsActive(false)
     }
 
@@ -217,8 +273,8 @@ export default function () {
                                 </div>
                             </div>
                             <div className="w-3/5 px-2">
-                                <BoldText color={TEXT_COLOR.BLACK}>
-                                    {"まつばらあきひこ".length > 6 ? "まつばらあき..." : "まつばらあき"}
+                                <BoldText color={textColor}>
+                                    {displayUserName.length > 6 ? `${displayUserName.substring(0, 6)}...` : displayUserName}
                                 </BoldText>
                             </div>
                         </div>
@@ -312,7 +368,7 @@ export default function () {
                     </div>
                 </div>
                 {/* 画面操作の無効化 */}
-                {playable && <div className="absolute h-screen w-full z-50" />}
+                {!playable && <div className="absolute h-screen w-full z-50" />}
             </div>
         </main>
     )

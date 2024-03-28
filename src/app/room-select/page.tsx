@@ -5,12 +5,12 @@ import ModalWindow from "@/components/ModalWindow"
 import PopUp from "@/components/PopUp"
 import { TEXT_COLOR } from "@/types/color"
 import { HTTP_KEYS } from "@/types/http"
-import { STRAGE_KEYS } from "@/types/localstrage"
+import { STORAGE_KEYS } from "@/types/localstorage"
 import { ROOM_SELECT } from "@/types/room-select"
 import { URLS } from "@/types/urls"
 import { generateRandomString } from "@/utils/generateRandomString"
 import { generateUUID } from "@/utils/generateUUID"
-import { initLocalStrage, setLocalStrage } from "@/utils/localstrage"
+import { initLocalStorage, setLocalStorage } from "@/utils/localstorage"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
@@ -42,7 +42,7 @@ export default function () {
         console.log("page_teamcode:", teamcode)
 
         if (Boolean(teamcode)) {
-            setLocalStrage(STRAGE_KEYS.TEAM_CODE, teamcode)
+            setLocalStorage(STORAGE_KEYS.TEAM_CODE, teamcode)
             router.push(URLS.ROOM_SETTING)
         } else {
             // TODO: エラー表示
@@ -72,7 +72,7 @@ export default function () {
         console.log("page_teamcode:", teamcode)
 
         if (Boolean(teamcode)) {
-            setLocalStrage(STRAGE_KEYS.TEAM_CODE, teamcode)
+            setLocalStorage(STORAGE_KEYS.TEAM_CODE, teamcode)
             router.push(URLS.ROOM_SETTING)
         } else {
             // TODO: エラー表示
@@ -81,19 +81,21 @@ export default function () {
     }
 
     useEffect(() => {
-        initLocalStrage(STRAGE_KEYS.ROOM_SELECT)
-        initLocalStrage(STRAGE_KEYS.USER_ID)
+        initLocalStorage(STORAGE_KEYS.ROOM_SELECT)
+        initLocalStorage(STORAGE_KEYS.USER_ID)
+        initLocalStorage(STORAGE_KEYS.USER_GROUP)
 
-        setLocalStrage(STRAGE_KEYS.USER_ID, generateUUID())
+        setLocalStorage(STORAGE_KEYS.USER_ID, generateUUID())
+        setLocalStorage(STORAGE_KEYS.USER_GROUP, "0")
     }, [])
 
     const handleHold = () => {
-        setLocalStrage(STRAGE_KEYS.ROOM_SELECT, ROOM_SELECT.HOLD)
+        setLocalStorage(STORAGE_KEYS.ROOM_SELECT, ROOM_SELECT.HOLD)
         createTeamCode()
     }
 
     const handleJoin = () => {
-        setLocalStrage(STRAGE_KEYS.ROOM_SELECT, ROOM_SELECT.JOIN)
+        setLocalStorage(STORAGE_KEYS.ROOM_SELECT, ROOM_SELECT.JOIN)
         setIsModalWindowDisplay(true)
     }
 
