@@ -6,7 +6,7 @@ export const enum URLS {
     RESULT = "/result",
     API = "/api/",
     // WEB_SOCKET = "ws://localhost:8080/",
-    WEB_SOCKET = "ws://darts-katsudon.koyeb.app:8000/",
+    WEB_SOCKET = "ws://darts-backend-3iqk.onrender.com/",
     // HTTP = "http://localhost:8080/"
-    HTTP = "https://darts-katsudon.koyeb.app:8000/"
+    HTTP = "https://darts-backend-3iqk.onrender.com/"
 }
