@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 .h-screen {
-    height: 100vh
-    hright: 100dvh
+    height: 100vh;
+    hright: 100dvh;
 }
 
 .groupButton {
