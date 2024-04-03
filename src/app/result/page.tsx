@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import ReconnectingWebSocket from "reconnecting-websocket"
 
-export default function () {
+export default function Result() {
     const [groupScoreList, setGroupScoreList] = useState<string[]>(["", "", ""])
     const [diplayList, setDisplayList] = useState<DisplayData[]>([])
 

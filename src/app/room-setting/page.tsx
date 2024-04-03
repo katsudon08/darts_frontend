@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import ReconnectingWebSocket from "reconnecting-websocket"
 
-export default function () {
+export default function RoomSetting() {
     const turnSocket = useRef<ReconnectingWebSocket>()
     const usersSocket = useRef<ReconnectingWebSocket>()
     const transitionSocket = useRef<ReconnectingWebSocket>()

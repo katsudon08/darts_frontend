@@ -14,7 +14,7 @@ import { initLocalStorage, setLocalStorage } from "@/utils/localstorage"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
-export default function () {
+export default function RoomSelect() {
     const router = useRouter()
     const [isModalWindowDisplay, setIsModalWindowDisplay] = useState(false)
     const [isCreatePopUpWindow, setIsCreatePopUpWindow] = useState(false)

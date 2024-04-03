@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation"
 import React, { useEffect, useRef, useState } from "react"
 import ReconnectingWebSocket from "reconnecting-websocket"
 
-export default function () {
+export default function Game() {
     const gameScoket = useRef<ReconnectingWebSocket>()
     const gameDisplaySocket = useRef<ReconnectingWebSocket>()
 
