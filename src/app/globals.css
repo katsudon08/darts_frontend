@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+.h-screen {
+    height: 100vh
+    hright: 100dvh
+}
+
 .groupButton {
     @apply rounded-xl h-full mx-2 py-3 shadow-xl
 }
