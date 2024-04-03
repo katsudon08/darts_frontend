@@ -3,5 +3,6 @@ export const enum SOCKET_KEYS {
     USERS = "users",
     TRANSITION = "transition",
     GAME = "game",
-    GAME_DISPLAY = "game-display"
+    GAME_DISPLAY = "game-display",
+    RESULT = "result"
 }

@@ -1,5 +1,6 @@
 import { GameData, GameDisplayData, GameInitData } from "@/types/game"
 import { MARK } from "@/types/message"
+import { ResultData } from "@/types/result"
 
 export const turnSocketMessage = (teamcode: string, msg: number): string => {
     const result = `${teamcode}${MARK.CONNECTION}${msg}`
@@ -36,5 +37,10 @@ export const gameSocketMessage = (gameData: GameData): string => {
 
 export const gameDisplaySocketMessage = (gameDisplayData: GameDisplayData): string => {
     const result = `${gameDisplayData.teamcode}${MARK.CONNECTION}${gameDisplayData.groupNum}${MARK.CONNECTION}${gameDisplayData.userName}${MARK.CONNECTION}${gameDisplayData.score}`
+    return result
+}
+
+export const resultSocketMessage = (resultData: ResultData): string => {
+    const result = `${resultData.teamcode}${MARK.CONNECTION}${resultData.groupNum}${MARK.CONNECTION}${resultData.score}`
     return result
 }

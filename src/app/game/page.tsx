@@ -9,6 +9,7 @@ import { MARK } from "@/types/message"
 import { URLS } from "@/types/urls"
 import { SOCKET_KEYS } from "@/types/websocket"
 import { getLocalStorage, initLocalStorage, setLocalStorage } from "@/utils/localstorage"
+import { plusScore } from "@/utils/plusScore"
 import { gameMessageToSplitLength } from "@/utils/receiveWebSocketMessage"
 import { gameDisplaySocketMessage, gameSocketInitMessage, gameSocketMessage } from "@/utils/sendWebSocketMessage"
 import { useRouter } from "next/navigation"
@@ -32,9 +33,9 @@ export default function () {
 
     const resetStrageScore = () => {
         setLocalStorage(STORAGE_KEYS.MY_SCORE, "0")
-        setLocalStorage(STORAGE_KEYS.RED_GROUP_SCORE, "0")
-        setLocalStorage(STORAGE_KEYS.BLUE_GROUP_SCORE, "0")
-        setLocalStorage(STORAGE_KEYS.GREEN_GROUP_SCORE, "0")
+        setLocalStorage(STORAGE_KEYS.RED_GROUP_SCORE, "")
+        setLocalStorage(STORAGE_KEYS.BLUE_GROUP_SCORE, "")
+        setLocalStorage(STORAGE_KEYS.GREEN_GROUP_SCORE, "")
     }
 
     const selectColor = (groupNum: string): TEXT_COLOR => {
@@ -88,28 +89,8 @@ export default function () {
             const msg = e.data
             const len = gameMessageToSplitLength(msg)
 
-            const plusScore = (key: STORAGE_KEYS, score: number) => {
-                const strageScore = Number(getLocalStorage(key))
-                const newScore = strageScore + score
-                setLocalStorage(key, String(newScore))
-            }
-
             const plusMyScore = (score: string) => {
                 plusScore(STORAGE_KEYS.MY_SCORE, Number(score))
-            }
-
-            const plusGroupScore = (groupNum: string, score: string) => {
-                switch (groupNum) {
-                    case "0":
-                        plusScore(STORAGE_KEYS.RED_GROUP_SCORE, Number(score))
-                        break
-                    case "1":
-                        plusScore(STORAGE_KEYS.BLUE_GROUP_SCORE, Number(score))
-                        break
-                    case "2":
-                        plusScore(STORAGE_KEYS.GREEN_GROUP_SCORE, Number(score))
-                        break
-                }
             }
 
             const transferPlayableToNextUser = (msg: string) => {
@@ -126,6 +107,7 @@ export default function () {
                 if (myUserId === nextUserId) {
                     console.log("debag 1")
                     setPlayable(true)
+                    myUserId === userId && plusMyScore(score)
                     const gameDisplayData: GameDisplayData = {
                         teamcode: getLocalStorage(STORAGE_KEYS.TEAM_CODE),
                         groupNum: getLocalStorage(STORAGE_KEYS.USER_GROUP),
@@ -137,7 +119,6 @@ export default function () {
                     console.log("debag 2")
                     setPlayable(false)
                     plusMyScore(score)
-                    plusGroupScore(groupNum, score)
                 } else {
                     console.log("debag 3")
                     setPlayable(false)
