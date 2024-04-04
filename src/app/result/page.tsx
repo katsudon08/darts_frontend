@@ -28,6 +28,7 @@ export default function Result() {
             setGroupScoreList((prevList) => {
                 const newList = [...prevList]
                 newList.splice(index, 1, getLocalStorage(key))
+                console.log("newList:", newList)
                 return newList
             })
         }
@@ -42,6 +43,8 @@ export default function Result() {
             case 2:
                 updateGroupScore(2, STORAGE_KEYS.GREEN_GROUP_SCORE)
                 break
+            default:
+                console.log("failed")
         }
     }
 
@@ -51,6 +54,7 @@ export default function Result() {
         }
 
         const tmpList = [...groupScoreList]
+        console.log("tmpList:", tmpList)
         const displayData: DisplayData[] = [
             {
                 groupNum: 0,
@@ -67,7 +71,7 @@ export default function Result() {
         ]
         displayData.sort(compareNumbers)
 
-        console.log(displayData)
+        console.log("displayData:", displayData)
         setDisplayList(displayData)
     }
 
@@ -100,13 +104,17 @@ export default function Result() {
             console.log(e.data)
             const [groupNum, score] = (e.data).split(MARK.CONNECTION)
             plusGroupScore(groupNum, score)
-            sortByScore()
         }
 
         return () => {
             resultSocket.current?.close()
         }
     }, [])
+
+    useEffect(() => {
+        console.log("re-rendering:", groupScoreList)
+        sortByScore()
+    }, [groupScoreList])
 
     return (
         <main>
