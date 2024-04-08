@@ -3,11 +3,15 @@ import BoldText from "./BoldText";
 import { useRouter } from "next/navigation";
 import { URLS } from "@/types/urls";
 
-const PopUp = ({ children }: { children: React.ReactNode }) => {
+const PopUp = ({ children, hidePopUpWindow }: { children: React.ReactNode, hidePopUpWindow?: () => void }) => {
     const router = useRouter()
 
     const handleReset = () => {
-        router.replace(URLS.HOME)
+        if (hidePopUpWindow !== undefined) {
+            hidePopUpWindow()
+        } else {
+            router.replace(URLS.HOME)
+        }
     }
 
     return (

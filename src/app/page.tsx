@@ -11,10 +11,13 @@ import { STORAGE_KEYS } from "@/types/localstorage"
 import { URLS } from "@/types/urls"
 import BoldText from "@/components/BoldText"
 import { TEXT_COLOR } from "@/types/color"
+import PopUp from "@/components/PopUp"
 
 export default function Home() {
     const router = useRouter()
     const [text, setText] = useState("")
+    const [isPopUpWindow, setIsPopUpWindow] = useState(false)
+    const hidePopUpWindow = (): void => setIsPopUpWindow(false)
 
     useEffect(() => {
         initLocalStorage(STORAGE_KEYS.USER_NAME)
@@ -22,14 +25,23 @@ export default function Home() {
     }, [])
 
     const handleClick = () => {
-        setLocalStorage(STORAGE_KEYS.USER_NAME, text)
-        router.push(URLS.ROOM_SELECT)
+        if (text) {
+            setLocalStorage(STORAGE_KEYS.USER_NAME, text)
+            router.push(URLS.ROOM_SELECT)
+        } else {
+            setIsPopUpWindow(true)
+        }
     }
 
     return (
-        <main>
+        <main className="flex h-screen w-full justify-center items-center bg-gradient-to-b from-blue-400 to-purple-800">
+            {isPopUpWindow &&
+                <PopUp hidePopUpWindow={hidePopUpWindow}>
+                    ユーザー名を入力してください
+                </PopUp>
+            }
             <div
-                className="flex h-screen justify-center items-center pt-10 bg-gradient-to-b from-blue-400 to-purple-800"
+                className="h-full w-full flex justify-center items-center"
                 onClick={handleClick}
             >
                 <div className="flex flex-col justify-between items-center pt-10 h-2/5">
@@ -45,6 +57,6 @@ export default function Home() {
                     </BoldText>
                 </div>
             </div>
-        </main>
+        </main >
     )
 }
