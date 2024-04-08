@@ -87,6 +87,7 @@ export default function RoomSelect() {
 
         setLocalStorage(STORAGE_KEYS.USER_ID, generateUUID())
         setLocalStorage(STORAGE_KEYS.USER_GROUP, "0")
+        setLocalStorage(STORAGE_KEYS.TEAM_CODE, "")
     }, [])
 
     const handleHold = () => {

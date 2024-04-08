@@ -50,6 +50,8 @@ export default function Result() {
 
     const sortByScore = () => {
         const compareNumbers = (a: DisplayData, b: DisplayData) => {
+            if (a.score === "" && b.score !== "") return 1
+            if (a.score !== "" && b.score === "") return -1
             return Number(b.score) - Number(a.score)
         }
 
