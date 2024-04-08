@@ -5,8 +5,8 @@ export const enum URLS {
     GAME = "/game",
     RESULT = "/result",
     API = "/api/",
-    WEB_SOCKET = "ws://localhost:8080/",
-    // WEB_SOCKET = "wss://darts-backend-3iqk.onrender.com/",
-    HTTP = "http://localhost:8080/"
-    // HTTP = "https://darts-backend-3iqk.onrender.com/"
+    // WEB_SOCKET = "ws://localhost:8080/",
+    WEB_SOCKET = "wss://darts-backend-3iqk.onrender.com/",
+    // HTTP = "http://localhost:8080/"
+    HTTP = "https://darts-backend-3iqk.onrender.com/"
 }
