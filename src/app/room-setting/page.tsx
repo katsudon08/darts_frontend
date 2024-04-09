@@ -103,6 +103,7 @@ export default function RoomSetting() {
 
         transitionSocket.current.onopen = () => {
             console.log("transition open")
+            transitionSocket.current?.send(`${getLocalStorage(STORAGE_KEYS.TEAM_CODE)} `)
         }
 
         transitionSocket.current.onclose = () => {
@@ -151,8 +152,8 @@ export default function RoomSetting() {
     }
 
     const handleContinue = () => {
-        usersSocket.current?.send(deleteUserData(teamcode))
-        transitionSocket.current?.send(getLocalStorage(STORAGE_KEYS.TEAM_CODE))
+        // usersSocket.current?.send(deleteUserData(teamcode))
+        transitionSocket.current?.send(teamcode)
     }
 
     return (
