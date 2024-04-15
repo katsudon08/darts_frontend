@@ -112,6 +112,7 @@ export default function RoomSetting() {
 
         transitionSocket.current.onmessage = () => {
             console.log("transition")
+            handleDeleteUser()
             router.replace(URLS.GAME)
         }
 
@@ -144,7 +145,7 @@ export default function RoomSetting() {
     }
 
     const handleFinish = () => {
-        usersSocket.current?.send(deleteUserData(teamcode))
+        handleDeleteUser()
         turnSocket.current?.close()
         usersSocket.current?.close()
         transitionSocket.current?.close()
@@ -152,7 +153,6 @@ export default function RoomSetting() {
     }
 
     const handleContinue = () => {
-        // usersSocket.current?.send(deleteUserData(teamcode))
         transitionSocket.current?.send(teamcode)
     }
 

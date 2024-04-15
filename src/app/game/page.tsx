@@ -17,7 +17,7 @@ import React, { useEffect, useRef, useState } from "react"
 import ReconnectingWebSocket from "reconnecting-websocket"
 
 export default function Game() {
-    const gameScoket = useRef<ReconnectingWebSocket>()
+    const gameSocket = useRef<ReconnectingWebSocket>()
     const gameDisplaySocket = useRef<ReconnectingWebSocket>()
 
     const router = useRouter()
@@ -64,26 +64,49 @@ export default function Game() {
         initLocalStorage(STORAGE_KEYS.GREEN_GROUP_SCORE)
         resetStrageScore()
 
-        gameScoket.current = new ReconnectingWebSocket(URLS.WEB_SOCKET + SOCKET_KEYS.GAME)
+        gameSocket.current = new ReconnectingWebSocket(URLS.WEB_SOCKET + SOCKET_KEYS.GAME)
         gameDisplaySocket.current = new ReconnectingWebSocket(URLS.WEB_SOCKET + SOCKET_KEYS.GAME_DISPLAY)
 
-        gameScoket.current.onopen = () => {
+        gameDisplaySocket.current.onopen = () => {
+            console.log("game-display open")
+        }
+        gameDisplaySocket.current.onclose = () => {
+            console.log("game-display close")
+        }
+        gameDisplaySocket.current.onmessage = (e) => {
+            console.log("display", e.data)
+            const [_, groupNum, userName, userScore] = (e.data).split(MARK.CONNECTION)
+            setTextColor(selectColor(groupNum))
+            setDisplayUserName(userName)
+            setScore(userScore)
+        }
+
+        gameSocket.current.onopen = () => {
             console.log("game open")
+
+            // groupNum userName score
+            const gameDisplayData: GameDisplayData = {
+                teamcode: getLocalStorage(STORAGE_KEYS.TEAM_CODE),
+                groupNum: getLocalStorage(STORAGE_KEYS.USER_GROUP),
+                userName: getLocalStorage(STORAGE_KEYS.USER_NAME),
+                score: 0
+            }
+            gameDisplaySocket.current?.send(gameDisplaySocketMessage(gameDisplayData))
+
             const gameData: GameInitData = {
                 teamcode: getLocalStorage(STORAGE_KEYS.TEAM_CODE),
                 groupNum: getLocalStorage(STORAGE_KEYS.USER_GROUP),
                 userName: getLocalStorage(STORAGE_KEYS.USER_NAME),
                 userId: getLocalStorage(STORAGE_KEYS.USER_ID),
             }
-            const msg = gameSocketInitMessage(gameData)
-            gameScoket.current?.send(msg)
+            gameSocket.current?.send(gameSocketInitMessage(gameData))
         }
 
-        gameScoket.current.onclose = () => {
+        gameSocket.current.onclose = () => {
             console.log("game close")
         }
 
-        gameScoket.current.onmessage = (e) => {
+        gameSocket.current.onmessage = (e) => {
             console.log(getLocalStorage(STORAGE_KEYS.USER_ID))
             console.log(e.data)
             const msg = e.data
@@ -124,15 +147,17 @@ export default function Game() {
                     setPlayable(false)
                 }
 
-                console.log("nowturn:", nowTurn, "turn:", getLocalStorage(STORAGE_KEYS.TURN))
+                if (isLast) {
+                    console.log("nowturn:", nowTurn, "turn:", getLocalStorage(STORAGE_KEYS.TURN))
 
-                setNowTurn((prevTurn) => {
-                    if (Boolean(isLast) && prevTurn + 1 > Number(getLocalStorage(STORAGE_KEYS.TURN))) {
-                        router.replace(URLS.RESULT);
-                        return prevTurn;
-                    }
-                    return prevTurn + 1;
-                })
+                    setNowTurn((prevTurn) => {
+                        if (Boolean(isLast) && prevTurn + 1 > Number(getLocalStorage(STORAGE_KEYS.TURN))) {
+                            router.replace(URLS.RESULT);
+                            return prevTurn;
+                        }
+                        return prevTurn + 1;
+                    })
+                }
             }
 
             const isMyUserId = (userId: string) => {
@@ -160,30 +185,8 @@ export default function Game() {
             }
         }
 
-        gameDisplaySocket.current.onopen = () => {
-            console.log("game-display open")
-            // groupNum userName score
-            const gameDisplayData: GameDisplayData = {
-                teamcode: getLocalStorage(STORAGE_KEYS.TEAM_CODE),
-                groupNum: getLocalStorage(STORAGE_KEYS.USER_GROUP),
-                userName: getLocalStorage(STORAGE_KEYS.USER_NAME),
-                score: 0
-            }
-            gameDisplaySocket.current?.send(gameDisplaySocketMessage(gameDisplayData))
-        }
-        gameDisplaySocket.current.onclose = () => {
-            console.log("game-display close")
-        }
-        gameDisplaySocket.current.onmessage = (e) => {
-            console.log("display", e.data)
-            const [_, groupNum, userName, userScore] = (e.data).split(MARK.CONNECTION)
-            setTextColor(selectColor(groupNum))
-            setDisplayUserName(userName)
-            setScore(userScore)
-        }
-
         return () => {
-            gameScoket.current?.close()
+            gameSocket.current?.close()
             gameDisplaySocket.current?.close()
         }
     }, [])
@@ -202,13 +205,13 @@ export default function Game() {
     }
 
     const handleTimes = (num: number) => {
-        setTimes(num)
         const gameDisplayData: GameDisplayData = {
             teamcode: getLocalStorage(STORAGE_KEYS.TEAM_CODE),
             groupNum: getLocalStorage(STORAGE_KEYS.USER_GROUP),
             userName: getLocalStorage(STORAGE_KEYS.USER_NAME),
-            score: num * score
+            score: num * (score / times)
         }
+        setTimes(num)
         gameDisplaySocket.current?.send(gameDisplaySocketMessage(gameDisplayData))
     }
 
@@ -228,7 +231,7 @@ export default function Game() {
             score: score
         }
         const msg = gameSocketMessage(gameData)
-        gameScoket.current?.send(msg)
+        gameSocket.current?.send(msg)
     }
 
     const handleReset = () => {
