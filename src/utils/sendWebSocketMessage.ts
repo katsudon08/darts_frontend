@@ -35,6 +35,11 @@ export const gameSocketMessage = (gameData: GameData): string => {
     return result
 }
 
+export const gameDisplaySocketInitMessage = (gameDisplayData: GameDisplayData): string => {
+    const result = `${gameDisplayData.teamcode}${MARK.CONNECTION}${gameDisplayData.groupNum}${MARK.CONNECTION}${gameDisplayData.userName}${MARK.CONNECTION}${gameDisplayData.score}${MARK.CONNECTION}}`
+    return result
+}
+
 export const gameDisplaySocketMessage = (gameDisplayData: GameDisplayData): string => {
     const result = `${gameDisplayData.teamcode}${MARK.CONNECTION}${gameDisplayData.groupNum}${MARK.CONNECTION}${gameDisplayData.userName}${MARK.CONNECTION}${gameDisplayData.score}`
     return result

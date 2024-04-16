@@ -11,7 +11,7 @@ import { SOCKET_KEYS } from "@/types/websocket"
 import { getLocalStorage, initLocalStorage, setLocalStorage } from "@/utils/localstorage"
 import { plusScore } from "@/utils/plusScore"
 import { gameMessageToSplitLength } from "@/utils/receiveWebSocketMessage"
-import { gameDisplaySocketMessage, gameSocketInitMessage, gameSocketMessage } from "@/utils/sendWebSocketMessage"
+import { gameDisplaySocketInitMessage, gameDisplaySocketMessage, gameSocketInitMessage, gameSocketMessage } from "@/utils/sendWebSocketMessage"
 import { useRouter } from "next/navigation"
 import React, { useEffect, useRef, useState } from "react"
 import ReconnectingWebSocket from "reconnecting-websocket"
@@ -75,7 +75,7 @@ export default function Game() {
         }
         gameDisplaySocket.current.onmessage = (e) => {
             console.log("display", e.data)
-            const [_, groupNum, userName, userScore] = (e.data).split(MARK.CONNECTION)
+            const [groupNum, userName, userScore] = (e.data).split(MARK.CONNECTION)
             setTextColor(selectColor(groupNum))
             setDisplayUserName(userName)
             setScore(userScore)
@@ -91,7 +91,7 @@ export default function Game() {
                 userName: getLocalStorage(STORAGE_KEYS.USER_NAME),
                 score: 0
             }
-            gameDisplaySocket.current?.send(gameDisplaySocketMessage(gameDisplayData))
+            gameDisplaySocket.current?.send(gameDisplaySocketInitMessage(gameDisplayData))
 
             const gameData: GameInitData = {
                 teamcode: getLocalStorage(STORAGE_KEYS.TEAM_CODE),

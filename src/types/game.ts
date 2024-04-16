@@ -13,5 +13,5 @@ export interface GameDisplayData {
     teamcode: string,
     groupNum: string,
     userName: string,
-    score: number
+    score: number,
 }
