@@ -20,6 +20,7 @@ export default function Result() {
     const [diplayList, setDisplayList] = useState<DisplayData[]>([])
 
     const resultSocket = useRef<ReconnectingWebSocket>()
+    const resultDisplaySocket = useRef<ReconnectingWebSocket>()
     const router = useRouter()
 
     const plusGroupScore = (groupNum: string, score: string) => {
@@ -55,26 +56,33 @@ export default function Result() {
             return Number(b.score) - Number(a.score)
         }
 
-        const tmpList = [...groupScoreList]
-        console.log("tmpList:", tmpList)
+        const createMessageFromDisplay = (displayData: DisplayData[]) => {
+            let msg = `${getLocalStorage(STORAGE_KEYS.TEAM_CODE)}${MARK.CONNECTION}`
+            for (let i=0; i<3; i++) {
+                msg += `${displayData[i].groupNum}:${displayData[i].score}${MARK.CONNECTION}`
+            }
+            return msg
+        }
+
+        // const tmpList = [...groupScoreList]
         const displayData: DisplayData[] = [
             {
                 groupNum: 0,
-                score: tmpList[0]
+                score: getLocalStorage(STORAGE_KEYS.RED_GROUP_SCORE)
             },
             {
                 groupNum: 1,
-                score: tmpList[1]
+                score: getLocalStorage(STORAGE_KEYS.BLUE_GROUP_SCORE)
             },
             {
                 groupNum: 2,
-                score: tmpList[2]
+                score: getLocalStorage(STORAGE_KEYS.GREEN_GROUP_SCORE)
             }
         ]
         displayData.sort(compareNumbers)
 
         console.log("displayData:", displayData)
-        setDisplayList(displayData)
+        resultDisplaySocket.current?.send(createMessageFromDisplay(displayData))
     }
 
     const handleContinue = () => {
@@ -89,6 +97,7 @@ export default function Result() {
         initLocalStorage(STORAGE_KEYS.GREEN_GROUP_SCORE)
 
         resultSocket.current = new ReconnectingWebSocket(URLS.WEB_SOCKET + SOCKET_KEYS.RESULT)
+        resultDisplaySocket.current = new ReconnectingWebSocket(URLS.WEB_SOCKET + SOCKET_KEYS.RESULT_DISPLAY)
 
         resultSocket.current.onopen = () => {
             console.log("result open")
@@ -99,17 +108,56 @@ export default function Result() {
             }
             resultSocket.current?.send(resultSocketMessage(resultData))
         }
+
         resultSocket.current.onclose = () => {
             console.log("result close")
         }
+
         resultSocket.current.onmessage = (e) => {
             console.log(e.data)
             const [groupNum, score] = (e.data).split(MARK.CONNECTION)
             plusGroupScore(groupNum, score)
         }
 
+        resultDisplaySocket.current.onopen = () => {
+            console.log("result-display open")
+        }
+
+        resultDisplaySocket.current.onclose = () => {
+            console.log("result-display close")
+        }
+
+        resultDisplaySocket.current.onmessage = (e) => {
+            const createDisplayDataFromMessage = (data: string[]) => {
+                const list: DisplayData[] = []
+                data.map((v) => {
+                    const [groupNum, userScore] = v.split(":")
+                    const displayData: DisplayData = {
+                        groupNum: Number(groupNum),
+                        score: userScore
+                    }
+                    console.log("data:", displayData)
+                    list.push(displayData)
+                    console.log(list)
+                })
+                console.log("list:", list)
+                return list
+            }
+
+            console.log(e.data)
+            const displayData: string[] = (e.data).split(MARK.CONNECTION)
+
+            const slicedData = displayData.slice(0, displayData.length-1)
+            console.log(slicedData)
+
+            const newData = createDisplayDataFromMessage(slicedData)
+            console.log("sliced data:", newData)
+            setDisplayList(newData)
+        }
+
         return () => {
             resultSocket.current?.close()
+            resultDisplaySocket.current?.close()
         }
     }, [])
 
